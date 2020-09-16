@@ -17,7 +17,7 @@ export function Counter() {
   const [incrementAmount, setIncrementAmount] = useState("2");
 
   useEffect(() => {
-    dispatch(fetchTodo());
+    dispatch(fetchTodo({ test1: 321, test2: 123 }));
   }, []);
 
   return (

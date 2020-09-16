@@ -5,8 +5,8 @@ const name = "todo";
 
 export const fetchTodo = createAsyncThunk(
   `${name}/fetchTodo`, // 액션 이름을 정의해 주도록 합니다.
-  async (todoId, thunkAPI) => {
-    console.log(2);
+  async ({ test1, test2 }: { test1: number; test2: number }, thunkAPI) => {
+    console.log(2, test1, test2, thunkAPI);
     const response = await getSplashImage(1);
     console.log(response);
     return response.data;
