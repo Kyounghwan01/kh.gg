@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  createSelector
+} from "@reduxjs/toolkit";
 import { getSplashImage } from "api";
 import { RootState } from "../index";
 
@@ -7,8 +12,11 @@ const name = "kkkk";
 export const fetchTodo = createAsyncThunk(
   `${name}/fetchTodo`, // 액션 이름을 정의해 주도록 합니다.
   async ({ test1, test2 }: { test1: number; test2: number }, thunkAPI) => {
-    const response = await getSplashImage(1);
-    return response;
+    try {
+      return (await getSplashImage(1)).data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(await e.response.data);
+    }
   }
 );
 
@@ -41,22 +49,29 @@ export const todoSlice = createSlice({
     [fetchTodo.pending.type]: (state, action) => {
       // 호출 전
       state.loading = true;
-      console.log(567, action);
     },
     [fetchTodo.fulfilled.type]: (state, action) => {
       // 성공
       state.loading = true;
       state.lists = action.payload;
-      console.log(123, action);
     },
-    [fetchTodo.rejected.type]: (state, action) => {
+    [fetchTodo.rejected.type]: (
+      state,
+      action: PayloadAction<{ message: string; status: number }>
+    ) => {
       // 실패
       state.loading = true;
-      state.content = "";
+      state.title.zxc = action.payload.message;
+      state.lists = [];
     }
   }
 });
 
+const listState = (state: RootState) => state.todoSlice.lists;
+
+export const getFilterLike = createSelector(listState, lists => {
+  return lists.filter(({ likes }: { likes: number }) => likes > 10);
+});
 export const { setTitle } = todoSlice.actions;
 
 export const lists = (state: RootState) => state.todoSlice.lists;

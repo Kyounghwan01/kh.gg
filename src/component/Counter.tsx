@@ -8,7 +8,7 @@ import {
   selectCount
 } from "store/counter/counterSlice";
 import { setTitle } from "store/example/exampleSlice";
-import { lists, titles } from "store/example/exampleSlice";
+import { lists, titles, getFilterLike } from "store/example/exampleSlice";
 
 import { fetchTodo } from "store/example/exampleSlice";
 import styles from "./Counter.module.css";
@@ -17,6 +17,7 @@ export function Counter() {
   const count = useSelector(selectCount);
   const list = useSelector(lists);
   const title = useSelector(titles);
+  const filterLikes = useSelector(getFilterLike);
   const dispatch = useDispatch();
   const [incrementAmount, setIncrementAmount] = useState("2");
 
@@ -27,7 +28,7 @@ export function Counter() {
   return (
     <div>
       <p>123123 {title.zxc}</p>
-      {list.map(({ id }: { id: string }, index: React.ReactNode) => (
+      {filterLikes.map(({ id }: { id: string }, index: React.ReactNode) => (
         <p key={id}>
           {id}
           {index}
