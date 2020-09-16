@@ -1,15 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getSplashImage } from "../../api";
+import { RootState } from "../index";
 
 const name = "todo";
 
 export const fetchTodo = createAsyncThunk(
   `${name}/fetchTodo`, // 액션 이름을 정의해 주도록 합니다.
   async ({ test1, test2 }: { test1: number; test2: number }, thunkAPI) => {
-    console.log(2, test1, test2, thunkAPI);
     const response = await getSplashImage(1);
-    console.log(response);
-    return response.data;
+    return response;
   }
 );
 
@@ -19,6 +18,7 @@ export const todoSlice = createSlice({
     title: "",
     content: "",
     loading: false,
+    lists: [],
   },
   reducers: {},
   extraReducers: {
@@ -32,6 +32,7 @@ export const todoSlice = createSlice({
       state.loading = true;
       state.title = action.title;
       state.content = action.content;
+      state.lists = action.payload;
       console.log(123, action);
     },
     [fetchTodo.rejected.type]: (state, action) => {
@@ -43,5 +44,7 @@ export const todoSlice = createSlice({
     },
   },
 });
+
+export const lists = (state: RootState) => state.todoSlice.lists;
 
 export default todoSlice.reducer;

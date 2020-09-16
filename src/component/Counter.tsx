@@ -7,12 +7,14 @@ import {
   incrementAsync,
   selectCount,
 } from "../store/counter/counterSlice";
+import { lists } from "../store/example/exampleSlice";
 
 import { fetchTodo } from "../store/example/exampleSlice";
 import styles from "./Counter.module.css";
 
 export function Counter() {
   const count = useSelector(selectCount);
+  const list = useSelector(lists);
   const dispatch = useDispatch();
   const [incrementAmount, setIncrementAmount] = useState("2");
 
@@ -22,6 +24,12 @@ export function Counter() {
 
   return (
     <div>
+      {list.map(({ id }: { id: string }, index) => (
+        <p key={id}>
+          {id}
+          {index}
+        </p>
+      ))}
       <div className={styles.row}>
         <button
           className={styles.button}
