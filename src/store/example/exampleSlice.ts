@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getSplashImage } from "../../api";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getSplashImage } from "api";
 import { RootState } from "../index";
 
-const name = "todo";
+const name = "kkkk";
 
 export const fetchTodo = createAsyncThunk(
   `${name}/fetchTodo`, // 액션 이름을 정의해 주도록 합니다.
@@ -12,15 +12,31 @@ export const fetchTodo = createAsyncThunk(
   }
 );
 
+type stateType = {
+  title: { zxc: string; content: number };
+  content: string;
+  loading: boolean;
+  lists: any;
+};
+
+const initialState: stateType = {
+  title: { zxc: "ttttt", content: 0 },
+  content: "",
+  loading: false,
+  lists: []
+};
+
 export const todoSlice = createSlice({
   name,
-  initialState: {
-    title: "",
-    content: "",
-    loading: false,
-    lists: [],
+  initialState,
+  reducers: {
+    setTitle: (
+      state,
+      action: PayloadAction<{ zxc: string; content: number }>
+    ) => {
+      state.title.zxc = action.payload.zxc;
+    }
   },
-  reducers: {},
   extraReducers: {
     [fetchTodo.pending.type]: (state, action) => {
       // 호출 전
@@ -30,21 +46,20 @@ export const todoSlice = createSlice({
     [fetchTodo.fulfilled.type]: (state, action) => {
       // 성공
       state.loading = true;
-      state.title = action.title;
-      state.content = action.content;
       state.lists = action.payload;
       console.log(123, action);
     },
     [fetchTodo.rejected.type]: (state, action) => {
       // 실패
       state.loading = true;
-      state.title = "";
       state.content = "";
-      console.log(56, action);
-    },
-  },
+    }
+  }
 });
 
+export const { setTitle } = todoSlice.actions;
+
 export const lists = (state: RootState) => state.todoSlice.lists;
+export const titles = (state: RootState) => state.todoSlice.title;
 
 export default todoSlice.reducer;

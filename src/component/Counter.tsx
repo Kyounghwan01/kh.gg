@@ -5,31 +5,37 @@ import {
   increment,
   incrementByAmount,
   incrementAsync,
-  selectCount,
-} from "../store/counter/counterSlice";
-import { lists } from "../store/example/exampleSlice";
+  selectCount
+} from "store/counter/counterSlice";
+import { setTitle } from "store/example/exampleSlice";
+import { lists, titles } from "store/example/exampleSlice";
 
-import { fetchTodo } from "../store/example/exampleSlice";
+import { fetchTodo } from "store/example/exampleSlice";
 import styles from "./Counter.module.css";
 
 export function Counter() {
   const count = useSelector(selectCount);
   const list = useSelector(lists);
+  const title = useSelector(titles);
   const dispatch = useDispatch();
   const [incrementAmount, setIncrementAmount] = useState("2");
 
   useEffect(() => {
     dispatch(fetchTodo({ test1: 321, test2: 123 }));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>
-      {list.map(({ id }: { id: string }, index) => (
+      <p>123123 {title.zxc}</p>
+      {list.map(({ id }: { id: string }, index: React.ReactNode) => (
         <p key={id}>
           {id}
           {index}
         </p>
       ))}
+      <button onClick={() => dispatch(setTitle({ zxc: "z", content: 2 }))}>
+        setTitle
+      </button>
       <div className={styles.row}>
         <button
           className={styles.button}
@@ -52,7 +58,7 @@ export function Counter() {
           className={styles.textbox}
           aria-label="Set increment amount"
           value={incrementAmount}
-          onChange={(e) => setIncrementAmount(e.target.value)}
+          onChange={e => setIncrementAmount(e.target.value)}
         />
         <button
           className={styles.button}
