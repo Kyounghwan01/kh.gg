@@ -8,14 +8,15 @@ import {
   selectCount
 } from "store/counter/counterSlice";
 import { setTitle } from "store/example/exampleSlice";
-import { lists, titles, getFilterLike } from "store/example/exampleSlice";
+import { titles, getFilterLike } from "store/example/exampleSlice";
 
 import { fetchTodo } from "store/example/exampleSlice";
 import styles from "./Counter.module.css";
+import { Alert } from "react-bootstrap";
 
 export function Counter() {
   const count = useSelector(selectCount);
-  const list = useSelector(lists);
+  // const list = useSelector(lists);
   const title = useSelector(titles);
   const filterLikes = useSelector(getFilterLike);
   const dispatch = useDispatch();
@@ -27,7 +28,20 @@ export function Counter() {
 
   return (
     <div>
-      <p>123123 {title.zxc}</p>
+      <Alert variant="danger" onClose={() => console.log(1)}>
+        <Alert.Heading>Hey, nice to see you</Alert.Heading>
+        <p>
+          Aww yeah, you successfully read this important alert message. This
+          example text is going to run a bit longer so that you can see how
+          spacing within an alert works with this kind of content.
+        </p>
+        <hr />
+        <p className="mb-0">
+          Whenever you need to, be sure to use margin utilities to keep things
+          nice and tidy.
+        </p>
+      </Alert>
+      <p>ㅇㅇㅇㅇ123123 {title.zxc}</p>
       {filterLikes.map(({ id }: { id: string }, index: React.ReactNode) => (
         <p key={id}>
           {id}

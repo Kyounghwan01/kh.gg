@@ -1,5 +1,5 @@
 {
-  "name": "delivery-tracker",
+  "name": "kh.gg",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,7 +15,9 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/redux-logger": "^3.0.8",
     "axios": "^0.20.0",
+    "bbootstrap": "^1.0.0",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.3.0",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",

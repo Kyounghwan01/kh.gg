@@ -25,13 +25,15 @@ type stateType = {
   content: string;
   loading: boolean;
   lists: any;
+  likes: number;
 };
 
 const initialState: stateType = {
   title: { zxc: "ttttt", content: 0 },
   content: "",
   loading: false,
-  lists: []
+  lists: [],
+  likes: 15
 };
 
 export const todoSlice = createSlice({
@@ -68,10 +70,14 @@ export const todoSlice = createSlice({
 });
 
 const listState = (state: RootState) => state.todoSlice.lists;
+const targetLikes = (state: RootState) => state.todoSlice.likes;
 
-export const getFilterLike = createSelector(listState, lists => {
-  return lists.filter(({ likes }: { likes: number }) => likes > 10);
-});
+export const getFilterLike = createSelector(
+  [listState, targetLikes],
+  (lists, targetLikes) =>
+    lists.filter(({ likes }: { likes: number }) => likes > targetLikes)
+);
+
 export const { setTitle } = todoSlice.actions;
 
 export const lists = (state: RootState) => state.todoSlice.lists;
