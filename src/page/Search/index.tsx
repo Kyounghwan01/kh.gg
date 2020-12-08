@@ -1,3 +1,3 @@
-import SearchContainer from 'page/Search/SearchContainer';
+import SearchPresenter from 'page/Search/SearchPresenter';
 
-export default SearchContainer;
+export default SearchPresenter;

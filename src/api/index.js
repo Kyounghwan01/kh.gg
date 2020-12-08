@@ -1,5 +1,5 @@
-import axios from "axios";
-const key = "5f96323678d05ff0c4eb264ef184556868e303b32a2db88ecbf15746e6f25e02";
+import axios from 'axios';
+const key = 'RGAPI-3e6ec870-5f4f-4528-bcb9-db78cf2f89ee';
 
 // const getSplashImage = (page = 1) => {
 //   return fetch("https://api.qa.studiomate.kr/v2/member/board")
@@ -9,9 +9,6 @@ const key = "5f96323678d05ff0c4eb264ef184556868e303b32a2db88ecbf15746e6f25e02";
 //       throw err;
 //     });
 // };
-const getSplashImage = (page = 1) =>
-  axios.get(
-    `https://api.unsplash.com/photos/?client_id=${key}&page=${page}&per_page=30`
-  );
+const getSplashImage = (page = 1) => axios.get(`https://api.unsplash.com/photos/?client_id=${key}&page=${page}&per_page=30`);
 
 export { getSplashImage };
