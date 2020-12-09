@@ -16,7 +16,6 @@ const SearchPresenter = ({ testStore }: { testStore: TestInterface }) => {
   return (
     <MainLayout>
       <div>search box</div>
-      {process.env.REACT_APP_API_KEY}
       {/* {testStore} */}
       <button onClick={testStore.addTodo}>dd</button>
     </MainLayout>
