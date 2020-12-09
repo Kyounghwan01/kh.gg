@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_KEY = 'RGAPI-3e6ec870-5f4f-4528-bcb9-db78cf2f89ee';
+// const API_KEY = 'RGAPI-3e6ec870-5f4f-4528-bcb9-db78cf2f89ee';
 
 const BASE_URL = '/v2/member/board';
 
