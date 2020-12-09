@@ -30,5 +30,8 @@ type getNotiRes = {
 export default {
   // 공지
   getNoti: (params: getNotiType) => axios.get<getNotiRes>(BASE_URL, { params }),
-  getName: () => axios.get('/lol/summoner/v4/summoners/by-name/Newtone?api_key=RGAPI-3e6ec870-5f4f-4528-bcb9-db78cf2f89ee'),
+  getName: () =>
+    axios.get(
+      'https://cors-kh.herokuapp.com/https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/Newtone?api_key=RGAPI-3e6ec870-5f4f-4528-bcb9-db78cf2f89ee',
+    ),
 };
