@@ -8,6 +8,7 @@ export default function Routes() {
     <Router>
       <Switch>
         <Route exact path="/" component={Search} />
+        <Route exact path="/summoner/:id" component={Search} />
       </Switch>
     </Router>
   );

@@ -15,10 +15,6 @@ const Header = () => {
             <GameTitle>리그 오브 레전드</GameTitle>
           </GameLogoBox>
         </NavbarLeft>
-        <NavbarRight>
-          <LoginBtn>로그인</LoginBtn>
-          <img src={'s3://marcus.gg/icon-language@2x.png'} alt={''} />
-        </NavbarRight>
       </Navbar>
     </NavbarLayout>
   );
@@ -33,7 +29,7 @@ const NavbarLayout = styled.div`
   z-index: 4;
   justify-content: center;
   padding: 0 1rem;
-  background-color: #0e1726;
+  background-color: skyblue;
 `;
 
 const Navbar = styled.div`

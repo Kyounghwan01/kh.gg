@@ -30,5 +30,7 @@ type getNotiRes = {
 export default {
   // 공지
   getNoti: (params: getNotiType) => axios.get<getNotiRes>(BASE_URL, { params }),
-  getName: () => axios.get('/lol/summoner/v4/summoners/by-name/Newtone?api_key=RGAPI-3e6ec870-5f4f-4528-bcb9-db78cf2f89ee'),
+  getUserData: (userName: string) => axios.get(`/lol/summoner/v4/summoners/by-name/${userName}`),
+  getPrivateUserData: (encryptedAccountId: string) => axios.get(`/lol/league/v4/entries/by-summoner/${encryptedAccountId}`),
+  getRecentMatches: (encryptedAccountId: string) => axios.get(`/lol/match/v4/matchlists/by-account/${encryptedAccountId}`),
 };
