@@ -8,12 +8,9 @@ const Header = () => {
       <Navbar>
         <NavbarLeft>
           <Link to={'/'}>
-            <BrandLogo src={'https://s3.ap-northeast-2.amazonaws.com/marcus.gg/kaisa_logo_darknavy_text.svg'} alt={'logo'} />
+            {/* <GameLogo src={'https://s3.ap-northeast-2.amazonaws.com/marcus.gg/leagueOfLegendIcon.png'} alt={'logo'} /> */}
+            <GameTitle>KH.GG</GameTitle>
           </Link>
-          <GameLogoBox>
-            <GameLogo src={'https://s3.ap-northeast-2.amazonaws.com/marcus.gg/leagueOfLegendIcon.png'} alt={'logo'} />
-            <GameTitle>리그 오브 레전드</GameTitle>
-          </GameLogoBox>
         </NavbarLeft>
       </Navbar>
     </NavbarLayout>
@@ -65,14 +62,11 @@ const GameLogo = styled.img`
 `;
 
 const GameTitle = styled.div`
-  color: ${props => props.theme.fontColor};
-  font-size: 14px;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
   letter-spacing: 0.35px;
-  padding-top: 2px;
-  margin-right: 8px;
-  line-height: 1;
-  visibility: visible;
-  white-space: nowrap;
+  line-height: 55px;
 `;
 const NavbarRight = styled.div``;
 

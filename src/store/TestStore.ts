@@ -1,4 +1,4 @@
-import { action, observable, runInAction, flow, toJS } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 import api from 'api/modules/test';
 
 export interface TestInterface {
@@ -18,19 +18,6 @@ class TestStore implements TestInterface {
   @observable loading = false;
   @observable userData: { accountId: string } = { accountId: '1' };
 
-  fetchApi = (params: boolean): any => {
-    return new Promise(res => {
-      window.setTimeout(function () {
-        console.log(222);
-        if (params) {
-          res('ok');
-        } else {
-          res('error');
-        }
-      }, 1000);
-    });
-  };
-
   @action toggleTodo = async () => {
     console.log(1);
     this.loading = true;
@@ -39,28 +26,27 @@ class TestStore implements TestInterface {
   @action
   search = async (userName: string) => {
     this.loading = true;
-    // this.loading = false;
 
-    // try {
-    const res = await api.getUserData(userName);
-    console.log(res);
-    // 티어정보
-    const res1 = await api.getPrivateUserData(res.data.id);
-    // 최근 100경기 매치 정보
-    // const res1 = await api.getRecentMatches(res.data.accountId);
-    console.log(res1);
-    this.userData = res.data;
-    console.log(this.userData);
-    this.loading = false;
-
-    // } catch {
-    // } finally {
-    //   console.log(1);
-    //   this.loading = false;
-    //   runInAction(() => {
-    //     this.loading = false;
-    //   });
-    // }
+    try {
+      const data = await api.getChampionInfo();
+      console.log(data);
+      const res = await api.getUserData(userName);
+      console.log(res);
+      // 티어정보
+      const res1 = await api.getPrivateUserData(res.data.id);
+      // 최근 100경기 매치 정보
+      // const res1 = await api.getRecentMatches(res.data.accountId);
+      console.log(res1);
+      this.userData = res.data;
+      console.log(this.userData);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log(1);
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
   };
 }
 
