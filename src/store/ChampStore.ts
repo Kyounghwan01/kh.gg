@@ -15,7 +15,6 @@ class ChampStore implements ChampInterface {
   }
 
   @observable champs = {};
-  // @observable loading = false;
 
   @action getAllChamps = async () => {
     try {

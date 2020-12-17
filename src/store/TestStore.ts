@@ -7,7 +7,9 @@ export interface TestInterface {
   };
   currentId: number;
   loading: boolean;
-  userData: any;
+  done: boolean;
+  userData: { accountId: string };
+  errorMessage: string;
   search: (userName: string) => void;
   toggleTodo: () => void;
 }
@@ -16,7 +18,9 @@ class TestStore implements TestInterface {
   @observable eeee: { [index: string]: number } = { a: 1, b: 2 };
   @observable currentId = 1;
   @observable loading = false;
-  @observable userData: { accountId: string } = { accountId: '1' };
+  @observable done = false;
+  @observable errorMessage = '';
+  @observable userData = { accountId: '1' };
 
   @action toggleTodo = async () => {
     console.log(1);
@@ -28,8 +32,6 @@ class TestStore implements TestInterface {
     this.loading = true;
 
     try {
-      const data = await api.getChampionInfo();
-      console.log(data);
       const res = await api.getUserData(userName);
       console.log(res);
       // 티어정보
@@ -38,9 +40,14 @@ class TestStore implements TestInterface {
       // const res1 = await api.getRecentMatches(res.data.accountId);
       console.log(res1);
       this.userData = res.data;
+      this.errorMessage = '';
+      this.done = true;
       console.log(this.userData);
     } catch (e) {
-      console.log(e);
+      console.log(e.response);
+      if (e.response.status === 404) {
+        this.errorMessage = '소환사가 존재하지 않습니다!';
+      }
     } finally {
       console.log(1);
       runInAction(() => {
