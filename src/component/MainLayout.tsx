@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from 'component/Header';
+import styled from 'styled-components';
 
 type MainLayoutTypes = {
   children: React.ReactNode;
@@ -7,11 +8,13 @@ type MainLayoutTypes = {
 
 const MainLayout = ({ children }: MainLayoutTypes) => {
   return (
-    <div>
+    <Container>
       <Header />
       {children}
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div``;
 
 export default MainLayout;

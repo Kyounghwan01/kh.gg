@@ -1,7 +1,7 @@
 import { action, observable, runInAction } from 'mobx';
-import api from 'api/modules/test';
+import api from 'api/modules/riotApi';
 import RootStore from './RootStore';
-import TestStore from './TestStore';
+import UserStore from './UserStore';
 
 export interface ChampInterface {
   champs: any;
@@ -9,16 +9,16 @@ export interface ChampInterface {
 }
 
 class ChampStore implements ChampInterface {
-  testStore: TestStore;
+  userStore: UserStore;
   constructor(rootStore: RootStore) {
-    this.testStore = rootStore.testStore;
+    this.userStore = rootStore.userStore;
   }
 
   @observable champs = {};
 
   @action getAllChamps = async () => {
     try {
-      this.testStore.loading = true;
+      this.userStore.loading = true;
       const res = await api.getChampionInfo();
       console.log(res.data);
       runInAction(() => {
@@ -27,7 +27,7 @@ class ChampStore implements ChampInterface {
     } catch (e) {
       console.log(e);
     } finally {
-      this.testStore.loading = false;
+      this.userStore.loading = false;
     }
   };
 }

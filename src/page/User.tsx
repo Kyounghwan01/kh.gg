@@ -1,19 +1,21 @@
 import React, { useEffect } from 'react';
 import { observer, inject } from 'mobx-react';
+import { userProps } from 'store/UserStore';
+import { ChampInterface } from 'store/ChampStore';
 import MainLayout from 'component/MainLayout';
 
-import { TestInterface } from 'store/TestStore';
-import { ChampInterface } from 'store/ChampStore';
-
 interface HomeContainerProps {
-  testStore: TestInterface;
+  userStore: userProps;
   champStore: ChampInterface;
 }
 
-const User = ({ testStore, champStore }: HomeContainerProps) => {
+// useEffect done 제거
+
+const User = ({ userStore, champStore }: HomeContainerProps) => {
   useEffect(() => {
-    console.log(testStore);
-  }, [testStore]);
+    userStore.resetDone();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <MainLayout>
       <div>user area</div>
@@ -21,4 +23,4 @@ const User = ({ testStore, champStore }: HomeContainerProps) => {
   );
 };
 
-export default inject('testStore', 'champStore')(observer(User));
+export default inject('userStore', 'champStore')(observer(User));

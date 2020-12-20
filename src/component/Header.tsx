@@ -25,40 +25,22 @@ const NavbarLayout = styled.div`
   top: 0;
   z-index: 4;
   justify-content: center;
-  padding: 0 1rem;
-  background-color: skyblue;
+  background: #5383e8;
 `;
 
 const Navbar = styled.div`
   display: flex;
-  height: 52px;
+  height: 6vh;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  border-bottom: 1px solid #4171d6;
 `;
 
 const NavbarLeft = styled.div`
   display: flex;
-  height: 100%;
-`;
-
-const BrandLogo = styled.img`
-  width: 90px;
-  height: 100%;
-  margin-right: 2rem;
-`;
-
-const GameLogoBox = styled.div`
-  display: flex;
   align-items: center;
-  padding: 0px 8px 0px 12px;
   height: 100%;
-`;
-
-const GameLogo = styled.img`
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
 `;
 
 const GameTitle = styled.div`
@@ -66,16 +48,5 @@ const GameTitle = styled.div`
   font-size: 30px;
   font-weight: bold;
   letter-spacing: 0.35px;
-  line-height: 55px;
-`;
-const NavbarRight = styled.div``;
-
-const LoginBtn = styled.button`
-  //color: ${props => props.theme.redColor};
-  color: #b1b7e5;
-  border: none;
-  background-color: transparent;
-  outline: none;
-  font-size: 15px;
-  cursor: pointer;
+  padding-left: 20px;
 `;

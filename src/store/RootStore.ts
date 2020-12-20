@@ -1,14 +1,14 @@
-import TestStore from './TestStore';
+import UserStore from './UserStore';
 import InjectionStore from './InjectionStore';
 import ChampStore from './ChampStore';
 
 class RootStore {
-  testStore: TestStore;
+  userStore: UserStore;
   injectionStore: InjectionStore;
   champStore: ChampStore;
 
   constructor() {
-    this.testStore = new TestStore();
+    this.userStore = new UserStore();
     this.injectionStore = new InjectionStore();
     this.champStore = new ChampStore(this);
   }
