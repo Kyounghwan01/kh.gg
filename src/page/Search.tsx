@@ -2,21 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { observer, inject } from 'mobx-react';
 import styled from 'styled-components';
-import { userProps } from 'store/UserStore';
-import { ChampInterface } from 'store/ChampStore';
+import { userProps } from 'types/usetStore.type';
+import { champProps } from 'types/champStore.type';
 import MainLayout from 'component/MainLayout';
 
 interface HomeContainerProps {
   userStore: userProps;
-  champStore: ChampInterface;
+  champStore: champProps;
 }
 
 const Search = ({ userStore, champStore }: HomeContainerProps) => {
-  // const test = useParams();
   const history = useHistory();
   const [userName, setUserName] = useState<string>('');
 
   useEffect(() => {
+    if (Object.keys(champStore.champs).length) return;
+
     champStore.getAllChamps();
   }, [champStore]);
 

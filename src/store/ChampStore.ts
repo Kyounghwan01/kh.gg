@@ -2,13 +2,9 @@ import { action, observable, runInAction } from 'mobx';
 import api from 'api/modules/riotApi';
 import RootStore from './RootStore';
 import UserStore from './UserStore';
+import { champProps } from 'types/champStore.type';
 
-export interface ChampInterface {
-  champs: any;
-  getAllChamps: () => void;
-}
-
-class ChampStore implements ChampInterface {
+class ChampStore implements champProps {
   userStore: UserStore;
   constructor(rootStore: RootStore) {
     this.userStore = rootStore.userStore;
