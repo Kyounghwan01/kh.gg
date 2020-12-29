@@ -16,7 +16,7 @@ class ChampStore implements champProps {
     try {
       this.userStore.loading = true;
       const res = await api.getChampionInfo();
-      console.log(res.data);
+      // console.log(res.data.data.Aatrox);
       runInAction(() => {
         this.champs = res.data.data;
       });

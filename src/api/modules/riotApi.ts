@@ -1,4 +1,6 @@
 import axios from '../axios';
+import { AxiosResponse } from 'axios';
+import { AllChampionResponse } from 'types/champStore.type';
 
 export default {
   getUserData: (userName: string) => axios.get(`/lol/summoner/v4/summoners/by-name/${userName}`),
@@ -7,7 +9,8 @@ export default {
 
   getRecentMatches: (encryptedAccountId: string) => axios.get(`/lol/match/v4/matchlists/by-account/${encryptedAccountId}`),
 
-  getChampionInfo: () => axios.get(`https://cors-kh.herokuapp.com/http://ddragon.leagueoflegends.com/cdn/10.1.1/data/ko_KR/champion.json`),
+  getChampionInfo: (): Promise<AxiosResponse<AllChampionResponse>> =>
+    axios.get(`https://cors-kh.herokuapp.com/http://ddragon.leagueoflegends.com/cdn/10.1.1/data/ko_KR/champion.json`),
 
   getChampionImg: (champName: string) => axios.get(`http://ddragon.leagueoflegends.com/cdn/10.1.1/img/champion/${champName}.png`),
 };

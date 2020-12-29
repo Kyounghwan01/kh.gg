@@ -53,7 +53,7 @@ const Search = ({ userStore, champStore }: HomeContainerProps) => {
 
         <AlertMessage>
           {userStore.loading && <span className="loading">로딩중!</span>}
-          {userStore.errorMessage && <span className="error">{userStore.errorMessage}</span>}
+          {!userStore.loading && userStore.errorMessage && <span className="error">{userStore.errorMessage}</span>}
         </AlertMessage>
       </Container>
     </MainLayout>
