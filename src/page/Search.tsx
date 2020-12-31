@@ -46,15 +46,16 @@ const Search = ({ userStore, champStore }: HomeContainerProps) => {
     <MainLayout>
       <Container>
         <LogoImg src="https://attach.s.op.gg/logo/20201214011237.689bfe043f3bb36db950d9a0043a03c8.png" />
-        <Input onKeyPress={SearchEnter} type="text" value={userName} onChange={onChangeSummerName} placeholder="소환사 이름을 입력해주세요!" />
-        <SearchBtn disable={userStore.loading || !userName.length} disabled={userStore.loading || !userName.length} onClick={searchUserName}>
-          .GG
-        </SearchBtn>
-
         <AlertMessage>
           {userStore.loading && <span className="loading">로딩중!</span>}
           {!userStore.loading && userStore.errorMessage && <span className="error">{userStore.errorMessage}</span>}
         </AlertMessage>
+        <div style={{ position: 'relative', top: '-80px', left: '30px' }}>
+          <Input onKeyPress={SearchEnter} type="text" value={userName} onChange={onChangeSummerName} placeholder="소환사 이름을 입력해주세요!" />
+          <SearchBtn disable={userStore.loading || !userName.length} disabled={userStore.loading || !userName.length} onClick={searchUserName}>
+            .GG
+          </SearchBtn>
+        </div>
       </Container>
     </MainLayout>
   );
@@ -94,8 +95,7 @@ const SearchBtn = styled.button<{ disable: boolean }>`
   font-weight: bold;
   height: 30px;
   position: relative;
-  bottom: 160px;
-  left: 350px;
+  left: -80px;
   border-radius: 5px;
   width: 60px;
   &:hover {
@@ -104,7 +104,6 @@ const SearchBtn = styled.button<{ disable: boolean }>`
 `;
 
 const AlertMessage = styled.div`
-  position: absolute;
   span {
     color: white;
     font-size: 20px;
