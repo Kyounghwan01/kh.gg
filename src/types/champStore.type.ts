@@ -1,6 +1,8 @@
 export interface champProps {
-  champs: any;
+  champs: { id: number; name: string }[];
+  ddragonVersion: string;
   getAllChamps: () => void;
+  champLoading: boolean;
 }
 
 export interface AllChampionResponse {

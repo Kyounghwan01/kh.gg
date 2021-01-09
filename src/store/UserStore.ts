@@ -1,33 +1,34 @@
-import { action, observable, runInAction, toJS, computed } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 import api from 'api/modules/riotApi';
 import { userProps, riotUserDataProps, positions } from 'types/usetStore.type';
+import RootStore from './RootStore';
+import ChampStore from './ChampStore';
 
 // const initState = { loading: false, done: false, errorMessage: '', userData: { accountId: '1' } };
 
 class UserStore implements userProps {
+  champStore: ChampStore;
+  constructor(rootStore: RootStore) {
+    this.champStore = rootStore.champStore;
+  }
+
   @observable loading = false;
   @observable done = false;
   @observable errorMessage = '';
   @observable userData = {
-    accountId: '1',
+    accountId: '0',
     summonerLevel: 1,
     rank: 'IV',
     tier: 'SILVER',
-    summonerName: 'Newtone',
+    summonerName: 'newtone',
     wins: 1,
     losses: 1,
     leaguePoints: 1,
   };
   @observable encryptedSummonerId = '';
-  @observable encryptedSummonerAccountId = '';
+  @observable encryptedAccountId = '';
   @observable gameInfo = [{ championId: 142, id: 4771757672, timestamp: 1604859413214 }];
-  @observable recentPositions = [
-    ['SUPPORT', 1],
-    ['JUNGLE', 2],
-    ['BOTTOM', 12],
-    ['MID', 3],
-    ['TOP', 1],
-  ];
+  @observable recentPositions = { SUPPORT: 1, JUNGLE: 2, BOTTOM: 12, MID: 3, TOP: 1 };
   @observable recentChampion = {};
 
   @action
@@ -37,7 +38,7 @@ class UserStore implements userProps {
       const riotUserData: riotUserDataProps = await api.getUserData(userName);
       // 티어정보
       this.encryptedSummonerId = riotUserData.data.id;
-      this.encryptedSummonerId = riotUserData.data.accountId;
+      this.encryptedAccountId = riotUserData.data.accountId;
       const privateData = await api.getPrivateUserData(riotUserData.data.id);
 
       // 최근 100경기 매치 정보, 마지막경기까지 뽑아와도되고, data에 matchId도 존재
@@ -60,17 +61,18 @@ class UserStore implements userProps {
           this.gameInfo.push({ championId: champion, id: gameId, timestamp: timestamp });
         },
       );
-      console.log(toJS(this.gameInfo));
 
-      let sortobj: (string | number)[][] = [];
-      for (let number in recentPosition) {
-        sortobj.push([number, recentPosition[number]]);
-      }
-      sortobj.sort((a: any, b: any) => b[1] - a[1]);
+      this.getMatchData();
 
       runInAction(() => {
-        this.recentPositions = sortobj;
-        this.userData = { summonerLevel: riotUserData.data.summonerLevel, ...privateData.data[0] };
+        this.recentPositions = Object.fromEntries(Object.entries(recentPosition).sort(([, a], [, b]) => b - a)) as any;
+
+        if (privateData.data.length) {
+          this.userData = { summonerLevel: riotUserData.data.summonerLevel, ...privateData.data[0] };
+        } else {
+          this.userData.summonerName = '';
+        }
+
         this.errorMessage = '';
         this.done = true;
       });
@@ -83,21 +85,24 @@ class UserStore implements userProps {
         this.loading = false;
       });
     }
-    this.getMatchData();
   };
 
   @action
   getMatchData = async () => {
+    // match id 도 넣어야함
     let recentChampion: positions = {};
 
     this.gameInfo.forEach((el: { championId: number; id: number }) => {
-      if (recentChampion.hasOwnProperty(String(el.championId))) {
-        recentChampion = { ...recentChampion, [el.championId]: ++recentChampion[el.championId] };
+      const champInfo = this.champStore.champs.find(champ => champ.id === el.championId);
+      if (!champInfo) return;
+
+      if (recentChampion.hasOwnProperty(champInfo.name)) {
+        recentChampion = { ...recentChampion, [champInfo.name]: ++recentChampion[champInfo.name] };
       } else {
-        recentChampion = { ...recentChampion, [el.championId]: 1 };
+        recentChampion = { ...recentChampion, [champInfo.name]: 1 };
       }
     });
-    this.recentChampion = recentChampion;
+    this.recentChampion = Object.fromEntries(Object.entries(recentChampion).sort(([, a], [, b]) => b - a));
   };
 
   // todo: initstate를 원하는 값만 바꾸기
@@ -110,11 +115,6 @@ class UserStore implements userProps {
   resetDone = () => {
     this.done = false;
   };
-
-  // @computed
-  // rankingPosition() {
-  //   return this.recentPositions;
-  // }
 }
 
 export default UserStore;

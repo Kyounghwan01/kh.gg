@@ -17,9 +17,10 @@ export interface userProps {
   };
   errorMessage: string;
   encryptedSummonerId: string;
-  encryptedSummonerAccountId: string;
-  recentPositions: (string | number)[][];
+  encryptedAccountId: string;
+  recentPositions: { [k: string]: number };
   gameInfo: { championId: number; id: number; timestamp: number }[];
+  recentChampion: positions;
   search: (userName: string) => void;
   resetDone: () => void;
 }

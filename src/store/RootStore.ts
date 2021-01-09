@@ -8,9 +8,9 @@ class RootStore {
   champStore: ChampStore;
 
   constructor() {
-    this.userStore = new UserStore();
+    this.champStore = new ChampStore();
+    this.userStore = new UserStore(this);
     this.injectionStore = new InjectionStore();
-    this.champStore = new ChampStore(this);
   }
 }
 

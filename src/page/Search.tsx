@@ -13,7 +13,7 @@ interface HomeContainerProps {
 
 const Search = ({ userStore, champStore }: HomeContainerProps) => {
   const history = useHistory();
-  const [userName, setUserName] = useState<string>('');
+  const [userName, setUserName] = useState<string>('hide on bush');
 
   useEffect(() => {
     if (Object.keys(champStore.champs).length) return;
@@ -37,7 +37,7 @@ const Search = ({ userStore, champStore }: HomeContainerProps) => {
   };
 
   const SearchEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' && !(userStore.loading || !userName.length)) {
+    if (e.key === 'Enter' && !(userStore.loading || champStore.champLoading || !userName.length)) {
       searchUserName();
     }
   };
@@ -47,12 +47,12 @@ const Search = ({ userStore, champStore }: HomeContainerProps) => {
       <Container>
         <LogoImg src="https://attach.s.op.gg/logo/20201214011237.689bfe043f3bb36db950d9a0043a03c8.png" />
         <AlertMessage>
-          {userStore.loading && <span className="loading">로딩중!</span>}
+          {(userStore.loading || champStore.champLoading) && <span className="loading">로딩중!</span>}
           {!userStore.loading && userStore.errorMessage && <span className="error">{userStore.errorMessage}</span>}
         </AlertMessage>
-        <div style={{ position: 'relative', top: '-80px', left: '30px' }}>
+        <div className="search-box">
           <Input onKeyPress={SearchEnter} type="text" value={userName} onChange={onChangeSummerName} placeholder="소환사 이름을 입력해주세요!" />
-          <SearchBtn disable={userStore.loading || !userName.length} disabled={userStore.loading || !userName.length} onClick={searchUserName}>
+          <SearchBtn disabled={userStore.loading || champStore.champLoading || !userName.length} onClick={searchUserName}>
             .GG
           </SearchBtn>
         </div>
@@ -68,6 +68,11 @@ const Container = styled.div`
   justify-content: space-evenly;
   flex-direction: column;
   background: #5383e8;
+  .search-box {
+    position: relative;
+    top: -80px;
+    margin: 0 auto;
+  }
 `;
 
 const LogoImg = styled.img`
@@ -76,7 +81,7 @@ const LogoImg = styled.img`
 `;
 
 const Input = styled.input`
-  width: 800px;
+  width: 600px;
   height: 60px;
   color: grey;
   border-radius: 5px;
@@ -88,18 +93,19 @@ const Input = styled.input`
   }
 `;
 
-const SearchBtn = styled.button<{ disable: boolean }>`
-  background: ${props => (props.disable ? 'grey' : 'dodgerblue')};
+const SearchBtn = styled.button<{ disabled: boolean }>`
+  background: ${props => (props.disabled ? 'grey' : 'dodgerblue')};
   border: none;
   color: white;
   font-weight: bold;
   height: 30px;
-  position: relative;
-  left: -80px;
+  position: absolute;
+  top: 15px;
+  right: 10px;
   border-radius: 5px;
   width: 60px;
   &:hover {
-    cursor: ${props => (props.disable ? '' : 'pointer')};
+    cursor: ${props => (props.disabled ? '' : 'pointer')};
   }
 `;
 
