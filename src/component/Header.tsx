@@ -30,7 +30,7 @@ const NavbarLayout = styled.div`
 
 const Navbar = styled.div`
   display: flex;
-  height: 6vh;
+  padding: 5px 0;
   align-items: center;
   justify-content: space-between;
   width: 100%;
@@ -48,5 +48,5 @@ const GameTitle = styled.div`
   font-size: 30px;
   font-weight: bold;
   letter-spacing: 0.35px;
-  padding-left: 20px;
+  padding: 5px 0 0 20px;
 `;

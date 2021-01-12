@@ -28,7 +28,7 @@ class UserStore implements userProps {
   @observable encryptedSummonerId = '';
   @observable encryptedAccountId = '';
   @observable gameInfo = [{ championId: 142, id: 4771757672, timestamp: 1604859413214 }];
-  @observable recentPositions = { SUPPORT: 1, JUNGLE: 2, BOTTOM: 12, MID: 3, TOP: 1 };
+  @observable recentPositions = { SUPPORT: 101, JUNGLE: 200, BOTTOM: 12, MID: 3, TOP: 1 };
   @observable recentChampion = {};
 
   @action
@@ -48,7 +48,7 @@ class UserStore implements userProps {
       recentMathes.data.matches.forEach(
         ({ lane, role, champion, gameId, timestamp }: { lane: string; role: string; champion: number; gameId: number; timestamp: number }) => {
           // champion 배열 넣기, gameId, season, timestamp
-          if (role === 'DUO_SUPPORT') {
+          if (role === 'DUO_SUPPORT' && lane === 'BOTTOM') {
             recentPosition.SUPPORT = recentPosition.SUPPORT += 1;
           } else if (role === 'DUO_CARRY') {
             recentPosition.BOTTOM = recentPosition.BOTTOM += 1;
