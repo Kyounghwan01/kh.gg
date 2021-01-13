@@ -45,6 +45,7 @@ class UserStore implements userProps {
       const recentMathes = await api.getRecentMatches(riotUserData.data.accountId);
 
       let recentPosition: positions = { SUPPORT: 0, BOTTOM: 0, TOP: 0, JUNGLE: 0, MID: 0 };
+      this.gameInfo = [];
       recentMathes.data.matches.forEach(
         ({ lane, role, champion, gameId, timestamp }: { lane: string; role: string; champion: number; gameId: number; timestamp: number }) => {
           // champion 배열 넣기, gameId, season, timestamp
@@ -61,6 +62,8 @@ class UserStore implements userProps {
           this.gameInfo.push({ championId: champion, id: gameId, timestamp: timestamp });
         },
       );
+      // const res = await api.getMatchDetail(4917798639);
+      // console.log(res);
 
       this.getMatchData();
 

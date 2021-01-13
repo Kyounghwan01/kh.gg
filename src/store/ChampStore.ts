@@ -7,6 +7,7 @@ class ChampStore implements champProps {
   @observable champLoading = false;
 
   @action getAllChamps = async () => {
+    // todo: spell, rune 정보 가져와야함
     try {
       this.champLoading = true;
       const version = await api.getDdrgonVersion();
