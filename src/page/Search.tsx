@@ -68,6 +68,7 @@ const Container = styled.div`
   justify-content: space-evenly;
   flex-direction: column;
   background: #5383e8;
+  /* background: black; */
   .search-box {
     position: relative;
     top: -80px;

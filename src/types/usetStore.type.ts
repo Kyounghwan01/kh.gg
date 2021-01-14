@@ -21,6 +21,7 @@ export interface userProps {
   recentPositions: { [k: string]: number };
   gameInfo: { championId: number; id: number; timestamp: number }[];
   recentChampion: positions;
+  pageParams: { lastPage: number; currentPage: number; total: number };
   search: (userName: string) => void;
   resetDone: () => void;
 }

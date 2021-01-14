@@ -1,5 +1,7 @@
 export interface champProps {
   champs: { id: number; name: string }[];
+  spell: { [id: number]: string };
+  rune: { id: number; name: string; img: string }[];
   ddragonVersion: string;
   getAllChamps: () => void;
   champLoading: boolean;
@@ -7,7 +9,7 @@ export interface champProps {
 
 export interface AllChampionResponse {
   data: {
-    Aatrox: {
+    [champ: string]: {
       blurb: string;
       id: string;
       image: { full: string; sprite: string; group: string };
@@ -17,6 +19,30 @@ export interface AllChampionResponse {
       partype: string;
       tags: string[];
       title: string;
+    };
+  };
+}
+
+export interface runeResponse {
+  id: number;
+  key: string;
+  icon: string;
+  name: string;
+  slots: {
+    runes: {
+      id: number;
+      key: string;
+      icon: string;
+      name: string;
+    }[];
+  }[];
+}
+
+export interface spellResponse {
+  data: {
+    [spellType: string]: {
+      key: string; // '21'
+      id: string; // SummonerBarrier
     };
   };
 }

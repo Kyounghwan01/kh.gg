@@ -30,6 +30,7 @@ class UserStore implements userProps {
   @observable gameInfo = [{ championId: 142, id: 4771757672, timestamp: 1604859413214 }];
   @observable recentPositions = { SUPPORT: 101, JUNGLE: 200, BOTTOM: 12, MID: 3, TOP: 1 };
   @observable recentChampion = {};
+  @observable pageParams = { lastPage: 0, currentPage: 0, total: 0 };
 
   @action
   search = async (userName: string) => {
@@ -44,6 +45,7 @@ class UserStore implements userProps {
       // 최근 100경기 매치 정보, 마지막경기까지 뽑아와도되고, data에 matchId도 존재
       const recentMathes = await api.getRecentMatches(riotUserData.data.accountId);
 
+      /** get recent position */
       let recentPosition: positions = { SUPPORT: 0, BOTTOM: 0, TOP: 0, JUNGLE: 0, MID: 0 };
       this.gameInfo = [];
       recentMathes.data.matches.forEach(
@@ -62,10 +64,19 @@ class UserStore implements userProps {
           this.gameInfo.push({ championId: champion, id: gameId, timestamp: timestamp });
         },
       );
-      // const res = await api.getMatchDetail(4917798639);
-      // console.log(res);
 
-      this.getMatchData();
+      /** 매치 정보 */
+      let promiseSet = [];
+      for (let i = 0; i < this.gameInfo.length; i++) {
+        if (i > 9) break;
+        promiseSet.push(api.getMatchDetail(this.gameInfo[i].id));
+      }
+      const resAll = await Promise.all(promiseSet);
+      resAll.sort((a, b) => b.data.gameCreation - a.data.gameCreation);
+      console.log(resAll); // 10개 match정보 배열
+      this.pageParams.currentPage = 1;
+
+      this.getRecentChamp();
 
       runInAction(() => {
         this.recentPositions = Object.fromEntries(Object.entries(recentPosition).sort(([, a], [, b]) => b - a)) as any;
@@ -91,8 +102,7 @@ class UserStore implements userProps {
   };
 
   @action
-  getMatchData = async () => {
-    // match id 도 넣어야함
+  getRecentChamp = async () => {
     let recentChampion: positions = {};
 
     this.gameInfo.forEach((el: { championId: number; id: number }) => {
@@ -108,14 +118,9 @@ class UserStore implements userProps {
     this.recentChampion = Object.fromEntries(Object.entries(recentChampion).sort(([, a], [, b]) => b - a));
   };
 
-  // todo: initstate를 원하는 값만 바꾸기
-  // @action
-  // resetState = (observable: string) => {
-  //   this[observable] = initState[observable];
-  // };
-
   @action
   resetDone = () => {
+    this.pageParams = { lastPage: 0, currentPage: 0, total: 0 };
     this.done = false;
   };
 }
