@@ -7,7 +7,7 @@ import { AllChampionResponse, runeResponse, spellResponse } from 'types/champSto
 class ChampStore implements champProps {
   @observable champs = [{ id: 0, name: 'champ' }];
   @observable rune = [{ id: 1, name: '', img: '' }];
-  @observable spell = {};
+  @observable spell = [{ id: 0, name: 'SummonerBarrier' }];
   @observable ddragonVersion = '';
   @observable champLoading = false;
 
@@ -27,10 +27,10 @@ class ChampStore implements champProps {
 
       const runeArray: { id: number; name: string; img: string }[] = [];
       resAll[1].data.forEach(major => {
-        runeArray.push({ id: major.id, name: major.key, img: major.icon });
+        runeArray.push({ id: major.id, name: major.icon, img: major.icon });
         major.slots.forEach(nest =>
           nest.runes.forEach(miner => {
-            runeArray.push({ id: miner.id, name: miner.key, img: miner.icon });
+            runeArray.push({ id: miner.id, name: miner.icon, img: miner.key });
           }),
         );
       });
@@ -38,8 +38,7 @@ class ChampStore implements champProps {
       runInAction(() => {
         // 이거 별로인듯 객체로 바꾸고, userStore -> const champInfo = this.champStore.champs.find(champ => champ.id === el.championId); 이부분 수정
         this.champs = Object.entries(resAll[0].data.data).map(([key, value]) => ({ id: Number(value.key), name: key }));
-
-        this.spell = Object.fromEntries(Object.entries(resAll[2].data.data).map(([k, v]) => [Number(v.key), k]));
+        this.spell = Object.entries(resAll[2].data.data).map(([k, v]) => ({ id: Number(v.key), name: k }));
         this.rune = runeArray;
       });
     } catch (e) {

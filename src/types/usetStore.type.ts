@@ -22,8 +22,10 @@ export interface userProps {
   gameInfo: { championId: number; id: number; timestamp: number }[];
   recentChampion: positions;
   pageParams: { lastPage: number; currentPage: number; total: number };
+  matchInfo: any;
   search: (userName: string) => void;
   resetDone: () => void;
+  setMatchData: () => void;
 }
 
 export interface riotUserDataProps {

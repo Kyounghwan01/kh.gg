@@ -5,6 +5,7 @@ import { userProps } from 'types/usetStore.type';
 import { champProps } from 'types/champStore.type';
 import MainLayout from 'component/MainLayout';
 import UserInfo from 'component/UserInfo';
+import Match from 'component/Match';
 
 interface HomeContainerProps {
   userStore: userProps;
@@ -25,7 +26,7 @@ const User = ({ userStore, champStore }: HomeContainerProps) => {
       <Container>
         <UserInfo />
         <div className="border"></div>
-        <div className="march-data">매치 데이터</div>
+        <Match />
       </Container>
     </MainLayout>
   );

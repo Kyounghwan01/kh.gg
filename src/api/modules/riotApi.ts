@@ -37,6 +37,9 @@ export default {
 
   // 룬이미지 -> img tag에서 바로 호출
   getRuneImg: (runeName: string) => axios.get(`https://ddragon.canisback.com/img/${runeName}`),
+
+  // 아이템 -> img tag에서 호출
+  // http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion}/img/item/6632.png
 };
 
 // img

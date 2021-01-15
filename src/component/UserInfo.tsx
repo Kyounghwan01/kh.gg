@@ -28,7 +28,7 @@ const UserInfo = () => {
                 </span>
               </div>
               <div className="context">
-                {wins + losses}G {userStore.encryptedAccountId}/ {wins}
+                {wins + losses}G / {wins}
                 <span className="blue">W</span> {losses}
                 <span className="blue" style={{ color: 'red' }}>
                   L
