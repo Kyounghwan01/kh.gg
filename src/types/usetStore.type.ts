@@ -1,3 +1,5 @@
+import { matchDetailResponse, matchProps } from './champStore.type';
+
 export interface positions {
   [position: string]: number;
 }
@@ -22,10 +24,10 @@ export interface userProps {
   gameInfo: { championId: number; id: number; timestamp: number }[];
   recentChampion: positions;
   pageParams: { lastPage: number; currentPage: number; total: number };
-  matchInfo: any;
+  matchInfo: matchProps[];
   search: (userName: string) => void;
   resetDone: () => void;
-  setMatchData: () => void;
+  setMatchData: (matchData: { data: matchDetailResponse }[]) => void;
 }
 
 export interface riotUserDataProps {

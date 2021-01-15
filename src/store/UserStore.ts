@@ -4,6 +4,7 @@ import { userProps, riotUserDataProps, positions } from 'types/usetStore.type';
 import { participantProps, matchDetailResponse, matchProps } from 'types/champStore.type';
 import RootStore from './RootStore';
 import ChampStore from './ChampStore';
+import dayjs from 'dayjs';
 
 // const initState = { loading: false, done: false, errorMessage: '', userData: { accountId: '1' } };
 
@@ -32,7 +33,7 @@ class UserStore implements userProps {
   @observable recentPositions = { SUPPORT: 101, JUNGLE: 200, BOTTOM: 12, MID: 3, TOP: 1 };
   @observable recentChampion = {};
   @observable pageParams = { lastPage: 0, currentPage: 0, total: 0 };
-  @observable matchInfo = [];
+  @observable matchInfo = [] as matchProps[];
 
   @action
   search = async (userName: string) => {
@@ -48,18 +49,17 @@ class UserStore implements userProps {
       const { recentPosition, newGameInfo } = await this.getRecentPosition();
 
       /** 매치 정보 */
-      let initMatchData = [];
       if (localStorage.getItem('matchData')) {
-        initMatchData = JSON.parse(localStorage.getItem('matchData') || '{}');
+        this.setMatchData(JSON.parse(localStorage.getItem('matchData') || '{}'));
       } else {
-        initMatchData = await this.getInitMatchData();
+        const res = await this.getInitMatchData();
+        console.log(res);
       }
       this.pageParams.currentPage = 1;
-      console.log(initMatchData);
       // todo matchData를 matchInfo로 넣어야함 + matchInfo type정의, champstore 분리
 
       /** 최근 사용한 챔피언 */
-      const recentChampion = await this.getRecentChamp();
+      const recentChampion = await this.getRecentChamp(newGameInfo);
 
       runInAction(() => {
         this.recentPositions = Object.fromEntries(Object.entries(recentPosition).sort(([, a], [, b]) => b - a)) as any;
@@ -87,10 +87,10 @@ class UserStore implements userProps {
   };
 
   @action
-  getRecentChamp = async () => {
+  getRecentChamp = async (newGameInfo: { championId: number; id: number }[]) => {
     let recentChampion: positions = {};
 
-    this.gameInfo.forEach((el: { championId: number; id: number }) => {
+    newGameInfo.forEach(el => {
       const champInfo = this.champStore.champs.find(champ => champ.id === el.championId);
       if (!champInfo) return;
 
@@ -151,58 +151,90 @@ class UserStore implements userProps {
   };
 
   @action
-  setMatchData = async () => {
-    const matchData: { data: matchDetailResponse }[] = JSON.parse(localStorage.getItem('matchData') || '{}');
+  setMatchData = async (matchData: { data: matchDetailResponse }[]) => {
     const newRes: matchProps[] = [];
+
     matchData.forEach(match => {
+      const { participants, participantIdentities, teams, gameCreation, gameDuration, gameId } = match.data;
       const team1: participantProps[] = [];
       const team2: participantProps[] = [];
-      match.data.participants.forEach((user, index) => {
+      let me = {} as participantProps & { win: boolean };
+
+      participants.forEach((user, index) => {
+        const { participantId, championId, spell1Id, spell2Id } = user;
+        const {
+          item0,
+          item1,
+          item2,
+          item3,
+          item4,
+          item5,
+          item6,
+          kills,
+          assists,
+          champLevel,
+          totalDamageDealtToChampions,
+          totalMinionsKilled,
+          perk0,
+          perk4,
+        } = user.stats;
+
         const usersMatchData = {
-          participantsId: user.participantId,
-          name: match.data.participantIdentities[index].player.summonerName,
-          matchHistoryUri: match.data.participantIdentities[index].player.matchHistoryUri,
-          summonerId: match.data.participantIdentities[index].player.accountId,
-          spell: [
-            this.mappingIdToName('spell', user.spell1Id) || 'SummonerTeleport',
-            this.mappingIdToName('spell', user.spell2Id) || 'SummonerFlash',
-          ],
-          championId: this.mappingIdToName('champion', user.championId) || 'Samira',
-          item: [user.stats.item0, user.stats.item1, user.stats.item2, user.stats.item3, user.stats.item4, user.stats.item5, user.stats.item6],
-          kills: user.stats.kills,
-          assists: user.stats.assists,
-          champLevel: user.stats.champLevel,
-          totalDamageDealtToChampions: user.stats.totalDamageDealtToChampions,
-          totalMinionsKilled: user.stats.totalMinionsKilled,
+          participantsId: participantId,
+          name: participantIdentities[index].player.summonerName,
+          matchHistoryUri: participantIdentities[index].player.matchHistoryUri,
+          summonerId: participantIdentities[index].player.accountId,
+          spell: [this.mappingIdToName('spell', spell1Id) || 'SummonerTeleport', this.mappingIdToName('spell', spell2Id) || 'SummonerFlash'],
+          championId: this.mappingIdToName('champion', championId) || 'Samira',
+          item: [item0, item1, item2, item3, item4, item5, item6],
+          kills,
+          assists,
+          champLevel,
+          totalDamageDealtToChampions,
+          totalMinionsKilled,
           rune: [
-            this.mappingIdToName('rune', user.stats.perk0) || 'perk-images/Styles/7200_Domination.png',
-            this.mappingIdToName('rune', user.stats.perk4) || 'perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png',
+            this.mappingIdToName('rune', perk0) || 'perk-images/Styles/7200_Domination.png',
+            this.mappingIdToName('rune', perk4) || 'perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png',
           ],
         };
-        user.teamId === match.data.teams[0].teamId ? team1.push(usersMatchData) : team2.push(usersMatchData);
+        if (usersMatchData.summonerId === this.encryptedAccountId) {
+          const isWin = teams[user.teamId === 100 ? 0 : 1].win === 'Win' ? true : false;
+          me = { ...usersMatchData, win: isWin };
+        }
+        user.teamId === teams[0].teamId ? team1.push(usersMatchData) : team2.push(usersMatchData);
+
+        // faker data 완료시 삭제
+        if (index === participants.length - 1 && !Object.keys(me).length) {
+          const isWin = teams[user.teamId === 100 ? 0 : 1].win === 'Win' ? true : false;
+          me = { ...usersMatchData, win: isWin };
+        }
       });
+
       newRes.push({
-        gameCreation: match.data.gameCreation,
-        gameDuration: match.data.gameDuration,
-        gameId: match.data.gameId,
+        gameCreation: dayjs(gameCreation).format('YYYY.M.DD.'),
+        gameDuration:
+          gameDuration >= 3600
+            ? `${parseInt(String(gameDuration / 3600))}h ${parseInt(String((gameDuration % 3600) / 60))}m ${gameDuration % 60}s`
+            : `${Math.floor(gameDuration / 60)}m ${gameDuration - Math.floor(gameDuration / 60) * 60}s`,
+        gameId,
+        me,
         teams: [
           {
-            win: match.data.teams[0].win === 'Win' ? true : false,
-            bans: match.data.teams[0].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
-            teamId: match.data.teams[0].teamId,
+            win: teams[0].win === 'Win' ? true : false,
+            bans: teams[0].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
+            teamId: teams[0].teamId,
             participants: team1,
           },
           {
-            win: match.data.teams[1].win === 'Win' ? true : false,
-            bans: match.data.teams[1].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
-            teamId: match.data.teams[1].teamId,
+            win: teams[1].win === 'Win' ? true : false,
+            bans: teams[1].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
+            teamId: teams[1].teamId,
             participants: team2,
           },
         ],
       });
     });
-    // match data mapping
-    console.log(newRes);
+    this.matchInfo = newRes;
   };
 
   @action

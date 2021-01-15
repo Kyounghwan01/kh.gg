@@ -102,10 +102,9 @@ export interface participantProps {
   totalMinionsKilled: number;
   rune: string[];
 }
-
 export interface matchProps {
-  gameCreation: number;
-  gameDuration: number;
+  gameCreation: string;
+  gameDuration: string;
   gameId: number;
   teams: {
     win: boolean;
@@ -113,4 +112,5 @@ export interface matchProps {
     bans: string[];
     participants: participantProps[];
   }[];
+  me: participantProps & { win: boolean };
 }
