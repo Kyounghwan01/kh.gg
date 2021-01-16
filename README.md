@@ -1,8 +1,6 @@
-# sales-statistics
+# khgg
 
 - [배포 링크](https://khgg.netlify.com/)
-
-<img src="https://img.shields.io/badge/build-success-brightgreen" alt="build success">
 
 ## Intorduction
 
