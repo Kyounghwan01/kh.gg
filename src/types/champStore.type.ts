@@ -82,7 +82,7 @@ export interface matchDetailResponse {
       item5: number;
       item6: number;
       perk0: number; // 1순위 룬
-      perk4: number; // 2순위 룬
+      perkSubStyle: number; // 2순위 룬
     };
   }[];
 }
@@ -101,10 +101,12 @@ export interface participantProps {
   totalDamageDealtToChampions: number;
   totalMinionsKilled: number;
   rune: string[];
+  deaths: number;
 }
 export interface matchProps {
   gameCreation: string;
   gameDuration: string;
+  gameRawDuration: number;
   gameId: number;
   teams: {
     win: boolean;

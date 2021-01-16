@@ -170,12 +170,13 @@ class UserStore implements userProps {
           item5,
           item6,
           kills,
+          deaths,
           assists,
           champLevel,
           totalDamageDealtToChampions,
           totalMinionsKilled,
           perk0,
-          perk4,
+          perkSubStyle,
         } = user.stats;
 
         const usersMatchData = {
@@ -188,12 +189,13 @@ class UserStore implements userProps {
           item: [item0, item1, item2, item3, item4, item5, item6],
           kills,
           assists,
+          deaths,
           champLevel,
           totalDamageDealtToChampions,
           totalMinionsKilled,
           rune: [
             this.mappingIdToName('rune', perk0) || 'perk-images/Styles/7200_Domination.png',
-            this.mappingIdToName('rune', perk4) || 'perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png',
+            this.mappingIdToName('rune', perkSubStyle) || 'perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png',
           ],
         };
         if (usersMatchData.summonerId === this.encryptedAccountId) {
@@ -215,6 +217,7 @@ class UserStore implements userProps {
           gameDuration >= 3600
             ? `${parseInt(String(gameDuration / 3600))}h ${parseInt(String((gameDuration % 3600) / 60))}m ${gameDuration % 60}s`
             : `${Math.floor(gameDuration / 60)}m ${gameDuration - Math.floor(gameDuration / 60) * 60}s`,
+        gameRawDuration: gameDuration,
         gameId,
         me,
         teams: [

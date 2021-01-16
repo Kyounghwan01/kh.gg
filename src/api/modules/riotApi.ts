@@ -41,10 +41,3 @@ export default {
   // 아이템 -> img tag에서 호출
   // http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion}/img/item/6632.png
 };
-
-// img
-// http://ddragon.leagueoflegends.com/cdn/11.1.1/data/en_US/profileicon.json
-// http://ddragon.leagueoflegends.com/cdn/11.1.1/img/profileicon/685.png
-
-// http://ddragon.leagueoflegends.com/cdn/11.1.1/data/ko_KR/runesReforged.json
-// https://ddragon.canisback.com/img/perk-images/Styles/Precision/Conqueror/Conqueror.png

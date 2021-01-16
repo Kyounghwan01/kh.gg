@@ -23,6 +23,7 @@ const Match = () => {
       {userStore.matchInfo.map(match => {
         return (
           <Container key={match.gameId} $isWin={match.me.win}>
+            <span>{match.me.win ? 'Vistory' : 'Defeat'}</span>
             <span>{match.gameCreation}</span>
             <span>{match.gameDuration}</span>
             <img
@@ -30,6 +31,55 @@ const Match = () => {
               alt="champ img"
               style={{ width: '30px', height: '30px' }}
             />
+            <p>{match.me.championId}</p>
+            <p>Level{match.me.champLevel}</p>
+            <p>
+              {match.me.kills} / {match.me.deaths} / {match.me.assists}
+            </p>
+            <p>{match.me.deaths ? `${((match.me.kills + match.me.assists) / match.me.deaths).toFixed(1)}:1` : 'Perfect'} KDA</p>
+            <p>
+              {match.me.totalMinionsKilled}({(match.me.totalMinionsKilled / Math.floor(match.gameRawDuration / 60)).toFixed(1)}) CS
+            </p>
+            {match.me.item.map((item, index) => {
+              return (
+                <span key={index}>
+                  {item ? (
+                    <img
+                      src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/item/${item}.png`}
+                      alt="champ img"
+                      style={{ width: '20px', height: '20px' }}
+                    />
+                  ) : (
+                    <span style={{ width: '20px', height: '20px', background: '#ffffff' }}>d</span>
+                  )}
+                </span>
+              );
+            })}
+            <div>
+              {match.me.rune.map((rune, index) => {
+                return (
+                  <div style={{ width: '20px', height: '20px', background: 'black' }} key={index}>
+                    <img src={`https://ddragon.canisback.com/img/${rune}`} alt="champ img" style={{ width: '20px', height: '20px' }} />
+                  </div>
+                );
+              })}
+            </div>
+            <div>
+              {match.teams.map(team => {
+                return team.participants.map(partice => {
+                  return (
+                    <div key={partice.participantsId}>
+                      <span>{partice.name}</span>
+                      <img
+                        src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/champion/${partice.championId}.png`}
+                        alt="champ img"
+                        style={{ width: '20px', height: '20px' }}
+                      />
+                    </div>
+                  );
+                });
+              })}
+            </div>
           </Container>
         );
       })}
