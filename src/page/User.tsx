@@ -18,9 +18,6 @@ const User = ({ userStore, champStore }: HomeContainerProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const { summonerLevel, tier, rank, summonerName, wins, losses, leaguePoints } = userStore.userData;
-  // const { recentPositions, recentChampion } = userStore;
-
   return (
     <MainLayout>
       <Container>

@@ -33,6 +33,11 @@ const Match = () => {
           </Container>
         );
       })}
+      <div className="pages">
+        끝 페이지 <span>{userStore.pageParams.lastPage}</span>
+        total <span>{userStore.pageParams.total}</span>
+        현재 페이지 <span>{userStore.pageParams.currentPage}</span>
+      </div>
     </div>
   );
 };

@@ -55,7 +55,6 @@ class UserStore implements userProps {
         const res = await this.getInitMatchData();
         console.log(res);
       }
-      this.pageParams.currentPage = 1;
       // todo matchData를 matchInfo로 넣어야함 + matchInfo type정의, champstore 분리
 
       /** 최근 사용한 챔피언 */
@@ -94,11 +93,7 @@ class UserStore implements userProps {
       const champInfo = this.champStore.champs.find(champ => champ.id === el.championId);
       if (!champInfo) return;
 
-      if (recentChampion.hasOwnProperty(champInfo.name)) {
-        recentChampion = { ...recentChampion, [champInfo.name]: ++recentChampion[champInfo.name] };
-      } else {
-        recentChampion = { ...recentChampion, [champInfo.name]: 1 };
-      }
+      recentChampion = { ...recentChampion, [champInfo.name]: recentChampion.hasOwnProperty(champInfo.name) ? ++recentChampion[champInfo.name] : 1 };
     });
     return recentChampion;
   };
@@ -108,11 +103,15 @@ class UserStore implements userProps {
     // 최근 100경기 매치 정보, 마지막경기까지 뽑아와도되고, data에 matchId도 존재
     const recentMathes = await api.getRecentMatches(this.encryptedAccountId);
 
+    /** 페이지네이션 값 설정 */
+    this.pageParams.lastPage = recentMathes.data.totalGames >= 100 ? 10 : Math.floor(recentMathes.data.totalGames / 10) + 1;
+    this.pageParams.total = recentMathes.data.totalGames >= 100 ? 100 : recentMathes.data.totalGames;
+    this.pageParams.currentPage = 1;
+
     let recentPosition: positions = { SUPPORT: 0, BOTTOM: 0, TOP: 0, JUNGLE: 0, MID: 0 };
     const newGameInfo = [] as { championId: number; id: number; timestamp: number }[];
     recentMathes.data.matches.forEach(
       ({ lane, role, champion, gameId, timestamp }: { lane: string; role: string; champion: number; gameId: number; timestamp: number }) => {
-        // champion 배열 넣기, gameId, season, timestamp
         if (role === 'DUO_SUPPORT' && lane === 'BOTTOM') {
           recentPosition.SUPPORT = recentPosition.SUPPORT += 1;
         } else if (role === 'DUO_CARRY') {
@@ -239,7 +238,7 @@ class UserStore implements userProps {
 
   @action
   resetDone = () => {
-    this.pageParams = { lastPage: 0, currentPage: 0, total: 0 };
+    // this.pageParams = { lastPage: 0, currentPage: 0, total: 0 };
     this.done = false;
   };
 }
