@@ -110,9 +110,9 @@ export interface matchProps {
   gameId: number;
   teams: {
     win: boolean;
-    teamId: number; // teamId 100 -> red
+    teamId: number; // teamId 100 -> blue
     bans: string[];
     participants: participantProps[];
   }[];
-  me: participantProps & { win: boolean };
+  me: participantProps & { win: boolean; totalKill: number };
 }

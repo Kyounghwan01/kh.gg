@@ -157,7 +157,9 @@ class UserStore implements userProps {
       const { participants, participantIdentities, teams, gameCreation, gameDuration, gameId } = match.data;
       const team1: participantProps[] = [];
       const team2: participantProps[] = [];
-      let me = {} as participantProps & { win: boolean };
+      const totalKills = { red: 0, blue: 0 };
+      let teamId: number = 100;
+      let me = {} as participantProps & { win: boolean; totalKill: number };
 
       participants.forEach((user, index) => {
         const { participantId, championId, spell1Id, spell2Id } = user;
@@ -186,7 +188,7 @@ class UserStore implements userProps {
           summonerId: participantIdentities[index].player.accountId,
           spell: [this.mappingIdToName('spell', spell1Id) || 'SummonerTeleport', this.mappingIdToName('spell', spell2Id) || 'SummonerFlash'],
           championId: this.mappingIdToName('champion', championId) || 'Samira',
-          item: [item0, item1, item2, item3, item4, item5, item6],
+          item: [item0, item1, item2, item6, item3, item4, item5],
           kills,
           assists,
           deaths,
@@ -199,15 +201,25 @@ class UserStore implements userProps {
           ],
         };
         if (usersMatchData.summonerId === this.encryptedAccountId) {
+          teamId = user.teamId;
           const isWin = teams[user.teamId === 100 ? 0 : 1].win === 'Win' ? true : false;
-          me = { ...usersMatchData, win: isWin };
+          me = { ...usersMatchData, win: isWin, totalKill: 100 };
         }
         user.teamId === teams[0].teamId ? team1.push(usersMatchData) : team2.push(usersMatchData);
 
         // faker data 완료시 삭제
         if (index === participants.length - 1 && !Object.keys(me).length) {
           const isWin = teams[user.teamId === 100 ? 0 : 1].win === 'Win' ? true : false;
-          me = { ...usersMatchData, win: isWin };
+          me = { ...usersMatchData, win: isWin, totalKill: 100 };
+        }
+
+        if (index < 5) {
+          totalKills.blue += kills;
+        } else {
+          totalKills.red += kills;
+        }
+        if (index === participants.length - 1) {
+          me = { ...me, totalKill: teamId === 100 ? totalKills.blue : totalKills.red };
         }
       });
 
