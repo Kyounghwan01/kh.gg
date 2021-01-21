@@ -24,9 +24,9 @@ const Match = () => {
         return (
           <Container key={match.gameId} $isWin={match.me.win}>
             <div className="game-info">
-              <span>{match.gameCreation}</span>
-              <span>{match.me.win ? 'Vistory' : 'Defeat'}</span>
-              <span>{match.gameDuration}</span>
+              <p>{match.gameCreation}</p>
+              <p>{match.me.win ? <span className="font-blue">Vistory</span> : <span className="font-red">Defeat</span>}</p>
+              <p>{match.gameDuration}</p>
             </div>
 
             <div className="champion-info">
@@ -34,17 +34,17 @@ const Match = () => {
                 <img
                   src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/champion/${match.me.championId}.png`}
                   alt="champ img"
-                  style={{ width: '30px', height: '30px' }}
+                  style={{ width: '60px', height: '60px' }}
                 />
 
                 <div className="champion-info__image-box__spell">
                   {match.me.spell.map((spell, index) => {
                     return (
-                      <div style={{ width: '20px', height: '20px', background: 'black' }} key={index}>
+                      <div style={{ width: '30px', height: '30px', background: 'black', borderRadius: '5px' }} key={index}>
                         <img
                           src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/spell/${spell}.png`}
                           alt="spell-img"
-                          style={{ width: '20px', height: '20px' }}
+                          style={{ width: '30px', height: '30px' }}
                         />
                       </div>
                     );
@@ -54,9 +54,19 @@ const Match = () => {
                 <div className="champion-info__image-box__rune">
                   {match.me.rune.map((rune, index) => {
                     return (
-                      <div style={{ width: '20px', height: '20px', background: 'black' }} key={index}>
-                        <img src={`https://ddragon.canisback.com/img/${rune}`} alt="rune-img" style={{ width: '20px', height: '20px' }} />
-                      </div>
+                      <>
+                        {index === 0 ? (
+                          <div style={{ width: '30px', height: '30px', background: 'black', borderRadius: '5px' }} key={index}>
+                            <img src={`https://ddragon.canisback.com/img/${rune}`} alt="rune-img" style={{ width: '30px', height: '30px' }} />
+                          </div>
+                        ) : (
+                          <div
+                            style={{ width: '30px', height: '30px', backgroundColor: 'rgba( 201, 201, 201, 0.5 )', borderRadius: '5px' }}
+                            key={index}>
+                            <img src={`https://ddragon.canisback.com/img/${rune}`} alt="rune-img" style={{ width: '30px', height: '30px' }} />
+                          </div>
+                        )}
+                      </>
                     );
                   })}
                 </div>
@@ -66,13 +76,18 @@ const Match = () => {
 
             <div className="score-info">
               <p>
-                {match.me.kills} / {match.me.deaths} / {match.me.assists}
+                {match.me.kills} / <span className="font-red">{match.me.deaths}</span> / {match.me.assists}
               </p>
-              <p>{match.me.deaths ? `${((match.me.kills + match.me.assists) / match.me.deaths).toFixed(1)}:1` : 'Perfect'} KDA</p>
+              <p>
+                <span className="font-black">
+                  {match.me.deaths ? `${((match.me.kills + match.me.assists) / match.me.deaths).toFixed(1)}:1` : 'Perfect'}
+                </span>{' '}
+                KDA
+              </p>
             </div>
 
             <div className="game-detail-info">
-              <p>Level{match.me.champLevel}</p>
+              <p>Level {match.me.champLevel}</p>
               <p>
                 {match.me.totalMinionsKilled}({(match.me.totalMinionsKilled / Math.floor(match.gameRawDuration / 60)).toFixed(1)}) CS
               </p>
@@ -87,10 +102,18 @@ const Match = () => {
                       <img
                         src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/item/${item}.png`}
                         alt="champ img"
-                        style={{ width: '20px', height: '20px' }}
+                        style={{ width: '30px', height: '30px', borderRadius: '5px' }}
                       />
                     ) : (
-                      <div style={{ display: 'inline-block', width: '20px', height: '20px', background: 'grey', opacity: '0.3' }}></div>
+                      <div
+                        style={{
+                          display: 'inline-block',
+                          width: '30px',
+                          height: '30px',
+                          background: 'grey',
+                          opacity: '0.3',
+                          borderRadius: '5px',
+                        }}></div>
                     )}
                   </span>
                 );
@@ -101,14 +124,27 @@ const Match = () => {
               {/* 0~4번 왼쪽 나머지 오른쪽 */}
               {match.teams.map(team => {
                 return team.participants.map(partice => {
+                  console.log(partice, match.me);
                   return (
-                    <div key={partice.participantsId}>
+                    <div key={partice.participantsId} className="test">
+                      {partice.participantsId === match.me.participantsId ? (
+                        <img
+                          src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/champion/${
+                            partice.championId
+                          }.png`}
+                          alt="champ img"
+                          style={{ width: '20px', height: '20px', borderRadius: '50%' }}
+                        />
+                      ) : (
+                        <img
+                          src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/champion/${
+                            partice.championId
+                          }.png`}
+                          alt="champ img"
+                          style={{ width: '20px', height: '20px' }}
+                        />
+                      )}
                       <span>{partice.name}</span>
-                      <img
-                        src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/champion/${partice.championId}.png`}
-                        alt="champ img"
-                        style={{ width: '20px', height: '20px' }}
-                      />
                     </div>
                   );
                 });
@@ -134,9 +170,16 @@ const Container = styled.div<{ $isWin: boolean }>`
   padding: 10px 0;
   width: 100%;
   display: flex;
+  display: grid;
+  grid-template-columns: 0.8fr 1fr 0.8fr 1fr 1fr 2.3fr;
   .game-info {
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    p {
+      color: #555;
+    }
   }
   .champion-info {
     display: flex;
@@ -145,15 +188,64 @@ const Container = styled.div<{ $isWin: boolean }>`
       display: flex;
     }
   }
+  .score-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    p {
+      color: #555;
+      font-weight: bold;
+    }
+  }
+  .game-detail-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    p {
+      color: #555;
+    }
+  }
   .item-info {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 35px 35px 35px 35px;
+    grid-template-rows: 35px 35px;
+    text-align: center;
+    margin: 20px 0 0 10px;
   }
   .team-info {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
+  }
+  .test {
+    display: block;
+    width: 80px;
+    height: 18px;
+    margin-bottom: 3px;
+    text-align: left;
+    white-space: nowrap;
+    img {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 3px;
+    }
+    span {
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 11px;
+      color: #555;
+    }
+  }
+  .font-black {
+    color: black;
+  }
+  .font-red {
+    color: rgb(197, 68, 62);
+  }
+  .font-blue {
+    color: rgb(26, 120, 174);
   }
 `;
 
