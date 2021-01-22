@@ -28,6 +28,7 @@ export interface userProps {
   search: (userName: string) => void;
   resetDone: () => void;
   setMatchData: (matchData: { data: matchDetailResponse }[]) => void;
+  setOpen: (gameId: number) => void;
 }
 
 export interface riotUserDataProps {

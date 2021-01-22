@@ -238,14 +238,21 @@ class UserStore implements userProps {
             bans: teams[0].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
             teamId: teams[0].teamId,
             participants: team1,
+            dragonKills: teams[0].dragonKills,
+            baronKills: teams[0].baronKills,
+            towerKills: teams[0].towerKills,
           },
           {
             win: teams[1].win === 'Win' ? true : false,
             bans: teams[1].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
             teamId: teams[1].teamId,
             participants: team2,
+            dragonKills: teams[1].dragonKills,
+            baronKills: teams[1].baronKills,
+            towerKills: teams[1].towerKills,
           },
         ],
+        isOpenDetail: false,
       });
     });
     this.matchInfo = newRes;
@@ -255,6 +262,14 @@ class UserStore implements userProps {
   resetDone = () => {
     // this.pageParams = { lastPage: 0, currentPage: 0, total: 0 };
     this.done = false;
+  };
+
+  @action
+  setOpen = (gameId: number) => {
+    const game = this.matchInfo.find(game => game.gameId === gameId);
+    if (game) {
+      game.isOpenDetail = !game.isOpenDetail;
+    }
   };
 }
 

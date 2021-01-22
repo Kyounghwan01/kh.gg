@@ -52,7 +52,7 @@ export interface matchDetailResponse {
   gameCreation: number; // new Date(1610527482626)
   gameDuration: number; // 15*60 + 21
   gameId: number;
-  teams: { teamId: number; win: string; bans: { championId: number }[] }[];
+  teams: { teamId: number; win: string; bans: { championId: number }[]; baronKills: number; dragonKills: number; towerKills: number }[];
   participantIdentities: {
     participantId: number;
     player: {
@@ -113,6 +113,10 @@ export interface matchProps {
     teamId: number; // teamId 100 -> blue
     bans: string[];
     participants: participantProps[];
+    dragonKills: number;
+    baronKills: number;
+    towerKills: number;
   }[];
   me: participantProps & { win: boolean; totalKill: number };
+  isOpenDetail: boolean;
 }
