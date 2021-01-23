@@ -52,8 +52,8 @@ class UserStore implements userProps {
       if (localStorage.getItem('matchData')) {
         this.setMatchData(JSON.parse(localStorage.getItem('matchData') || '{}'));
       } else {
-        const res = await this.getInitMatchData();
-        console.log(res);
+        const res = await this.getInitMatchData(newGameInfo);
+        this.setMatchData(res);
       }
       // todo matchData를 matchInfo로 넣어야함 + matchInfo type정의, champstore 분리
 
@@ -128,11 +128,11 @@ class UserStore implements userProps {
   };
 
   @action
-  getInitMatchData = async () => {
+  getInitMatchData = async (newGameInfo: { championId: number; id: number }[]) => {
     let promiseSet = [];
-    for (let i = 0; i < this.gameInfo.length; i++) {
-      if (i > 9) break;
-      promiseSet.push(api.getMatchDetail(this.gameInfo[i].id));
+    for (let i = 0; i < newGameInfo.length; i++) {
+      if (i > 20) break;
+      promiseSet.push(api.getMatchDetail(newGameInfo[i].id));
     }
     const resAll = await Promise.all(promiseSet);
     localStorage.setItem('matchData', JSON.stringify(resAll));
@@ -241,6 +241,8 @@ class UserStore implements userProps {
             dragonKills: teams[0].dragonKills,
             baronKills: teams[0].baronKills,
             towerKills: teams[0].towerKills,
+            totalKills: totalKills.blue,
+            totalGolds: 0,
           },
           {
             win: teams[1].win === 'Win' ? true : false,
@@ -250,9 +252,12 @@ class UserStore implements userProps {
             dragonKills: teams[1].dragonKills,
             baronKills: teams[1].baronKills,
             towerKills: teams[1].towerKills,
+            totalKills: totalKills.red,
+            totalGolds: 0,
           },
         ],
-        isOpenDetail: false,
+        // isOpenDetail: false,
+        isOpenDetail: true,
       });
     });
     this.matchInfo = newRes;

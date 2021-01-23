@@ -116,6 +116,8 @@ export interface matchProps {
     dragonKills: number;
     baronKills: number;
     towerKills: number;
+    totalKills: number;
+    totalGolds: number;
   }[];
   me: participantProps & { win: boolean; totalKill: number };
   isOpenDetail: boolean;

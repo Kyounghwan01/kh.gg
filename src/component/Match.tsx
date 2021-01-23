@@ -156,13 +156,28 @@ const Match = () => {
             </Container>
             {match.isOpenDetail && (
               <div>
-                {match.teams.map((team, index) => {
-                  return (
-                    <div key={index}>
-                      <span>바론 {team.baronKills}</span>
-                    </div>
-                  );
-                })}
+                {match.teams
+                  // todo: 디테일 리스트 (내가 속한 팀부터 (이기고 지고 상관없음))
+                  // .sort((a, b) => (a.win < b.win ? -1 : b.win < a.win ? 0 : 1))
+                  .map((team, index) => {
+                    return (
+                      <div key={index}>
+                        <div>
+                          <img style={{ height: '10px' }} src={`/images/${team.win ? 'icon-baron-b' : 'icon-baron-r'}.png`} alt="바론 이미지" />
+                          <span>{team.baronKills}</span>
+                        </div>
+                        <div>
+                          <img style={{ height: '10px' }} src={`/images/${team.win ? 'icon-dragon-b' : 'icon-dragon-r'}.png`} alt="용 이미지" />
+                          <span>{team.dragonKills}</span>
+                        </div>
+                        <div>
+                          <img style={{ height: '10px' }} src={`/images/${team.win ? 'icon-tower-b' : 'icon-tower-r'}.png`} alt="타워 이미지" />
+                          <span>{team.towerKills}</span>
+                          <p> total kilss{team.totalKills}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
             )}
           </div>
