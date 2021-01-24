@@ -158,7 +158,8 @@ class UserStore implements userProps {
       const team1: participantProps[] = [];
       const team2: participantProps[] = [];
       const totalKills = { red: 0, blue: 0 };
-      let teamId: number = 100;
+      const totalGolds = { red: 0, blue: 0 };
+      let myTeamId: number = 100;
       let me = {} as participantProps & { win: boolean; totalKill: number };
 
       participants.forEach((user, index) => {
@@ -179,6 +180,7 @@ class UserStore implements userProps {
           totalMinionsKilled,
           perk0,
           perkSubStyle,
+          goldEarned,
         } = user.stats;
 
         const usersMatchData = {
@@ -200,8 +202,10 @@ class UserStore implements userProps {
             this.mappingIdToName('rune', perkSubStyle) || 'perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png',
           ],
         };
+
+        // 현재 userData가 accout에 있는 usetData와 같은 경우
         if (usersMatchData.summonerId === this.encryptedAccountId) {
-          teamId = user.teamId;
+          myTeamId = user.teamId;
           const isWin = teams[user.teamId === 100 ? 0 : 1].win === 'Win' ? true : false;
           me = { ...usersMatchData, win: isWin, totalKill: 100 };
         }
@@ -215,15 +219,17 @@ class UserStore implements userProps {
 
         if (index < 5) {
           totalKills.blue += kills;
+          totalGolds.blue += goldEarned;
         } else {
           totalKills.red += kills;
+          totalGolds.red += goldEarned;
         }
         if (index === participants.length - 1) {
-          me = { ...me, totalKill: teamId === 100 ? totalKills.blue : totalKills.red };
+          me = { ...me, totalKill: myTeamId === 100 ? totalKills.blue : totalKills.red };
         }
       });
 
-      newRes.push({
+      const params = {
         gameCreation: dayjs(gameCreation).format('YYYY.M.DD.'),
         gameDuration:
           gameDuration >= 3600
@@ -234,32 +240,40 @@ class UserStore implements userProps {
         me,
         teams: [
           {
-            win: teams[0].win === 'Win' ? true : false,
-            bans: teams[0].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
-            teamId: teams[0].teamId,
-            participants: team1,
-            dragonKills: teams[0].dragonKills,
-            baronKills: teams[0].baronKills,
-            towerKills: teams[0].towerKills,
-            totalKills: totalKills.blue,
-            totalGolds: 0,
-          },
-          {
             win: teams[1].win === 'Win' ? true : false,
             bans: teams[1].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
             teamId: teams[1].teamId,
-            participants: team2,
+            participants: team1,
             dragonKills: teams[1].dragonKills,
             baronKills: teams[1].baronKills,
             towerKills: teams[1].towerKills,
             totalKills: totalKills.red,
-            totalGolds: 0,
+            totalGolds: totalGolds.red,
+          },
+          {
+            win: teams[0].win === 'Win' ? true : false,
+            bans: teams[0].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
+            teamId: teams[0].teamId,
+            participants: team2,
+            dragonKills: teams[0].dragonKills,
+            baronKills: teams[0].baronKills,
+            towerKills: teams[0].towerKills,
+            totalKills: totalKills.blue,
+            totalGolds: totalGolds.blue,
           },
         ],
         // isOpenDetail: false,
         isOpenDetail: true,
-      });
+      };
+
+      // 블루이고 이기면
+      if (me.win && myTeamId === 100) {
+        params.teams.reverse();
+      }
+
+      newRes.push(params);
     });
+
     this.matchInfo = newRes;
   };
 

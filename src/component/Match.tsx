@@ -18,11 +18,21 @@ const Match = () => {
     console.log(toJS(userStore.matchInfo));
   }, [userStore.matchInfo]);
 
+  const checkBlueRedImg = (isWin: boolean, index: number): string => {
+    if (isWin && !index) {
+      return `b`;
+    } else if ((!isWin && !index) || (isWin && index)) {
+      return `r`;
+    } else {
+      return `b`;
+    }
+  };
+
   return (
     <div>
       {userStore.matchInfo.map(match => {
         return (
-          <div key={match.gameId}>
+          <React.Fragment key={match.gameId}>
             <Container $isWin={match.me.win}>
               <div className="game-info">
                 <p>{match.gameCreation}</p>
@@ -55,7 +65,7 @@ const Match = () => {
                   <div className="champion-info__image-box__rune">
                     {match.me.rune.map((rune, index) => {
                       return (
-                        <div key={index}>
+                        <React.Fragment key={index}>
                           {index === 0 ? (
                             <div style={{ width: '30px', height: '30px', background: 'black', borderRadius: '5px' }} key={index}>
                               <img src={`https://ddragon.canisback.com/img/${rune}`} alt="rune-img" style={{ width: '30px', height: '30px' }} />
@@ -67,7 +77,7 @@ const Match = () => {
                               <img src={`https://ddragon.canisback.com/img/${rune}`} alt="rune-img" style={{ width: '30px', height: '30px' }} />
                             </div>
                           )}
-                        </div>
+                        </React.Fragment>
                       );
                     })}
                   </div>
@@ -120,67 +130,99 @@ const Match = () => {
                   );
                 })}
               </div>
-
-              <div className="team-info">
-                {/* 0~4번 왼쪽 나머지 오른쪽 */}
-                {match.teams.map(team => {
-                  return team.participants.map(partice => {
-                    return (
-                      <div key={partice.participantsId} className="team-info__champ">
-                        {partice.participantsId === match.me.participantsId ? (
-                          <img
-                            src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/champion/${
-                              partice.championId
-                            }.png`}
-                            alt="champ img"
-                            style={{ width: '20px', height: '20px', borderRadius: '50%' }}
-                          />
-                        ) : (
-                          <img
-                            src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/champion/${
-                              partice.championId
-                            }.png`}
-                            alt="champ img"
-                            style={{ width: '20px', height: '20px' }}
-                          />
-                        )}
-                        <span>{partice.name}</span>
-                      </div>
-                    );
-                  });
+              {/* team list */}
+              <>
+                {match.teams.map((team, index) => {
+                  return (
+                    <div className="team-info" key={index}>
+                      {team.participants.map(partice => {
+                        return (
+                          <div key={partice.participantsId} className="team-info__champ">
+                            {partice.participantsId === match.me.participantsId ? (
+                              <img
+                                src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/champion/${
+                                  partice.championId
+                                }.png`}
+                                alt="champ img"
+                                style={{ width: '20px', height: '20px', borderRadius: '50%' }}
+                              />
+                            ) : (
+                              <img
+                                src={`http://ddragon.leagueoflegends.com/cdn/${champStore.ddragonVersion || '11.1.1'}/img/champion/${
+                                  partice.championId
+                                }.png`}
+                                alt="champ img"
+                                style={{ width: '20px', height: '20px' }}
+                              />
+                            )}
+                            <span>{partice.name}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
                 })}
-              </div>
+              </>
               <div className="detail-btn" onClick={() => userStore.setOpen(match.gameId)}>
                 {match.isOpenDetail ? '▲' : '▼'}
               </div>
             </Container>
             {match.isOpenDetail && (
-              <div>
-                {match.teams
-                  // todo: 디테일 리스트 (내가 속한 팀부터 (이기고 지고 상관없음))
-                  // .sort((a, b) => (a.win < b.win ? -1 : b.win < a.win ? 0 : 1))
-                  .map((team, index) => {
-                    return (
-                      <div key={index}>
+              <DetailContainer>
+                {match.teams.map((team, index) => {
+                  const redOrBlue = checkBlueRedImg(match.me.win, index);
+                  return (
+                    <React.Fragment key={index}>
+                      <div className="object">
                         <div>
-                          <img style={{ height: '10px' }} src={`/images/${team.win ? 'icon-baron-b' : 'icon-baron-r'}.png`} alt="바론 이미지" />
+                          <img style={{ height: '15px' }} src={`/images/icon-baron-${redOrBlue}.png`} alt="바론 이미지" />
                           <span>{team.baronKills}</span>
                         </div>
                         <div>
-                          <img style={{ height: '10px' }} src={`/images/${team.win ? 'icon-dragon-b' : 'icon-dragon-r'}.png`} alt="용 이미지" />
+                          <img style={{ height: '15px' }} src={`/images/icon-dragon-${redOrBlue}.png`} alt="용 이미지" />
                           <span>{team.dragonKills}</span>
                         </div>
                         <div>
-                          <img style={{ height: '10px' }} src={`/images/${team.win ? 'icon-tower-b' : 'icon-tower-r'}.png`} alt="타워 이미지" />
+                          <img style={{ height: '15px' }} src={`/images/icon-tower-${redOrBlue}.png`} alt="타워 이미지" />
                           <span>{team.towerKills}</span>
-                          <p> total kilss{team.totalKills}</p>
                         </div>
                       </div>
-                    );
-                  })}
-              </div>
+                      {!index && (
+                        <div className="common-data">
+                          <div className="common-data__context">
+                            <span>Total kiill</span>
+                          </div>
+                          <div className="common-data__graph">
+                            <BarGraph $redOrblue={redOrBlue} $width={(team.totalKills / (team.totalKills + match.teams[1].totalKills)) * 100}>
+                              <span>{team.totalKills}</span>
+                            </BarGraph>
+                            <BarGraph
+                              $redOrblue={redOrBlue === 'r' ? 'b' : 'r'}
+                              $width={(match.teams[1].totalKills / (team.totalKills + match.teams[1].totalKills)) * 100}>
+                              <span>{match.teams[1].totalKills}</span>
+                            </BarGraph>
+                          </div>
+                          <div className="common-data__context">
+                            <span>Total gold</span>
+                          </div>
+                          <div className="common-data__graph">
+                            <BarGraph $redOrblue={redOrBlue} $width={(team.totalGolds / (team.totalGolds + match.teams[1].totalGolds)) * 100}>
+                              <span>{team.totalGolds}</span>
+                            </BarGraph>
+                            <BarGraph
+                              $redOrblue={redOrBlue === 'r' ? 'b' : 'r'}
+                              $width={(match.teams[1].totalGolds / (team.totalGolds + match.teams[1].totalGolds)) * 100}>
+                              <span>{match.teams[1].totalGolds}</span>
+                            </BarGraph>
+                          </div>
+                        </div>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </DetailContainer>
             )}
-          </div>
+          </React.Fragment>
         );
       })}
       <div className="pages">
@@ -201,7 +243,7 @@ const Container = styled.div<{ $isWin: boolean }>`
   width: 100%;
   display: flex;
   display: grid;
-  grid-template-columns: 0.8fr 1fr 0.8fr 1fr 1fr 2.3fr 0.2fr;
+  grid-template-columns: 0.8fr 1fr 0.8fr 1fr 1fr 1fr 1fr 0.2fr;
   .game-info {
     display: flex;
     flex-direction: column;
@@ -253,8 +295,8 @@ const Container = styled.div<{ $isWin: boolean }>`
   }
   .team-info {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
     &__champ {
       display: block;
       width: 80px;
@@ -292,6 +334,46 @@ const Container = styled.div<{ $isWin: boolean }>`
   .font-blue {
     color: rgb(26, 120, 174);
   }
+`;
+
+const DetailContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  background: #dddddd;
+  padding: 10px;
+  .object {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    span {
+      margin-left: 10px;
+      color: #555;
+    }
+  }
+  .common-data {
+    display: grid;
+    grid-template-columns: 70px 400px;
+    grid-gap: 10px;
+    align-items: center;
+    justify-content: center;
+    &__context {
+      color: #555;
+      font-size: 15px;
+    }
+    &__graph {
+      display: flex;
+    }
+  }
+`;
+
+const BarGraph = styled.div<{ $redOrblue: string; $width: number }>`
+  height: 20px;
+  width: ${props => `${props.$width * 4}px`};
+  background: ${props => (props.$redOrblue === 'r' ? 'rgb(208, 90, 83)' : 'rgb(84, 141, 202)')};
+  line-height: 20px;
+  text-align: center;
+  font-size: 15px;
+  color: #555;
 `;
 
 export default observer(Match);

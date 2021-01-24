@@ -83,6 +83,7 @@ export interface matchDetailResponse {
       item6: number;
       perk0: number; // 1순위 룬
       perkSubStyle: number; // 2순위 룬
+      goldEarned: number;
     };
   }[];
 }
