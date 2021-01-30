@@ -6,8 +6,6 @@ import RootStore from './RootStore';
 import ChampStore from './ChampStore';
 import dayjs from 'dayjs';
 
-// const initState = { loading: false, done: false, errorMessage: '', userData: { accountId: '1' } };
-
 class UserStore implements userProps {
   champStore: ChampStore;
   constructor(rootStore: RootStore) {
@@ -32,7 +30,7 @@ class UserStore implements userProps {
   @observable gameInfo = [{ championId: 142, id: 4771757672, timestamp: 1604859413214 }];
   @observable recentPositions = { SUPPORT: 101, JUNGLE: 200, BOTTOM: 12, MID: 3, TOP: 1 };
   @observable recentChampion = {};
-  @observable pageParams = { lastPage: 0, currentPage: 0, total: 0 };
+  @observable pageParams = { lastPage: 10, currentPage: 1, total: 100 };
   @observable matchInfo = [] as matchProps[];
 
   @action
@@ -40,7 +38,7 @@ class UserStore implements userProps {
     this.loading = true;
     try {
       const riotUserData: riotUserDataProps = await api.getUserData(userName);
-      // 티어정보
+      /** 티어정보 */
       this.encryptedSummonerId = riotUserData.data.id;
       this.encryptedAccountId = riotUserData.data.accountId;
       const privateData = await api.getPrivateUserData(riotUserData.data.id);
@@ -49,13 +47,8 @@ class UserStore implements userProps {
       const { recentPosition, newGameInfo } = await this.getRecentPosition();
 
       /** 매치 정보 */
-      if (localStorage.getItem('matchData')) {
-        this.setMatchData(JSON.parse(localStorage.getItem('matchData') || '{}'));
-      } else {
-        const res = await this.getInitMatchData(newGameInfo);
-        this.setMatchData(res);
-      }
-      // todo matchData를 matchInfo로 넣어야함 + matchInfo type정의, champstore 분리
+      const res = await this.getInitMatchData(newGameInfo);
+      this.setMatchData(res);
 
       /** 최근 사용한 챔피언 */
       const recentChampion = await this.getRecentChamp(newGameInfo);
@@ -131,11 +124,10 @@ class UserStore implements userProps {
   getInitMatchData = async (newGameInfo: { championId: number; id: number }[]) => {
     let promiseSet = [];
     for (let i = 0; i < newGameInfo.length; i++) {
-      if (i > 20) break;
+      if (i > 9) break;
       promiseSet.push(api.getMatchDetail(newGameInfo[i].id));
     }
     const resAll = await Promise.all(promiseSet);
-    localStorage.setItem('matchData', JSON.stringify(resAll));
     return resAll.sort((a: any, b: any) => b.data.gameCreation - a.data.gameCreation);
   };
 
@@ -243,7 +235,7 @@ class UserStore implements userProps {
             win: teams[1].win === 'Win' ? true : false,
             bans: teams[1].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
             teamId: teams[1].teamId,
-            participants: team1,
+            participants: team2,
             dragonKills: teams[1].dragonKills,
             baronKills: teams[1].baronKills,
             towerKills: teams[1].towerKills,
@@ -254,7 +246,7 @@ class UserStore implements userProps {
             win: teams[0].win === 'Win' ? true : false,
             bans: teams[0].bans.map(el => this.mappingIdToName('champion', el.championId) || 'Samira'),
             teamId: teams[0].teamId,
-            participants: team2,
+            participants: team1,
             dragonKills: teams[0].dragonKills,
             baronKills: teams[0].baronKills,
             towerKills: teams[0].towerKills,
@@ -262,12 +254,10 @@ class UserStore implements userProps {
             totalGolds: totalGolds.blue,
           },
         ],
-        // isOpenDetail: false,
-        isOpenDetail: true,
+        isOpenDetail: false,
       };
 
-      // 블루이고 이기면
-      if (me.win && myTeamId === 100) {
+      if (myTeamId === 100) {
         params.teams.reverse();
       }
 
@@ -279,8 +269,22 @@ class UserStore implements userProps {
 
   @action
   resetDone = () => {
-    // this.pageParams = { lastPage: 0, currentPage: 0, total: 0 };
     this.done = false;
+  };
+
+  @action
+  searchPage = async (pageNumber: number) => {
+    this.loading = true;
+    let promiseSet = [];
+    for (let i = (pageNumber - 1) * 10; i < pageNumber * 10; i++) {
+      promiseSet.push(api.getMatchDetail(this.gameInfo[i].id));
+    }
+    const resAll = await Promise.all(promiseSet);
+    resAll.sort((a: any, b: any) => b.data.gameCreation - a.data.gameCreation);
+
+    this.setMatchData(resAll);
+    this.pageParams.currentPage = pageNumber;
+    this.loading = false;
   };
 
   @action

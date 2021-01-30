@@ -8,7 +8,6 @@ const Header = () => {
       <Navbar>
         <NavbarLeft>
           <Link to={'/'}>
-            {/* <GameLogo src={'https://s3.ap-northeast-2.amazonaws.com/marcus.gg/leagueOfLegendIcon.png'} alt={'logo'} /> */}
             <GameTitle>KH.GG</GameTitle>
           </Link>
         </NavbarLeft>

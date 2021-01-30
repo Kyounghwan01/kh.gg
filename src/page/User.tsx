@@ -22,7 +22,6 @@ const User = ({ userStore, champStore }: HomeContainerProps) => {
     <MainLayout>
       <Container>
         <UserInfo />
-        <div className="border"></div>
         <Match />
       </Container>
     </MainLayout>

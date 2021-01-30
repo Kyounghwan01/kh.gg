@@ -47,7 +47,6 @@ export interface spellResponse {
   };
 }
 
-// todo: matchHistoryUri로 해당 유저 누르면 그 유저의 최근 전적 및 그 유저의 정보 가져오기
 export interface matchDetailResponse {
   gameCreation: number; // new Date(1610527482626)
   gameDuration: number; // 15*60 + 21

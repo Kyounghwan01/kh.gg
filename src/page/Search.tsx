@@ -33,7 +33,6 @@ const Search = ({ userStore, champStore }: HomeContainerProps) => {
 
   const searchUserName = () => {
     userStore.search(userName);
-    setUserName('');
   };
 
   const SearchEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -51,7 +50,14 @@ const Search = ({ userStore, champStore }: HomeContainerProps) => {
           {!userStore.loading && userStore.errorMessage && <span className="error">{userStore.errorMessage}</span>}
         </AlertMessage>
         <div className="search-box">
-          <Input onKeyPress={SearchEnter} type="text" value={userName} onChange={onChangeSummerName} placeholder="소환사 이름을 입력해주세요!" />
+          <Input
+            onKeyPress={SearchEnter}
+            type="text"
+            value={userName}
+            onChange={onChangeSummerName}
+            disabled={userStore.loading || champStore.champLoading || !userName.length}
+            placeholder="소환사 이름을 입력해주세요!"
+          />
           <SearchBtn disabled={userStore.loading || champStore.champLoading || !userName.length} onClick={searchUserName}>
             .GG
           </SearchBtn>
