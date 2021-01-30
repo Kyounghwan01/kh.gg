@@ -16,7 +16,6 @@
 - [Deployment](#Deployment)
 - [roit api 정보](#roit-api-정보)
 - [Challenges](#Challenges)
-- [Things To Do](#Things-To-Do)
 
 ## Requirements
 
@@ -40,9 +39,7 @@ yarn start
 - 최근 솔로 랭크 100경기 포지션 현황
 - 최근 솔로 랭크 100경기 사용 챔피언 현황
 - 최근 솔로 랭크 100경기 매치 정보
-  - 처음은 10경기만 보이고 페이지네이션
-- 같이 경기한 유저 검색
-- 검색한 유저 현재 게임 중인지 현황
+  - 처음은 10경기만 보이고 100 경기 까지 페이지네이션
 
 ## Skills
 
@@ -161,18 +158,22 @@ GET: https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/:enc
 
 ## Challenges
 
-- typeScript
-  - 기본 타입 정의는 물론, api response까지 strict하게 정의
-  - 처음 설계를 할때는 사용할 모든 타입을 정의하기에 시간이 많이 소요됬으나, 본격적인 개발을 착수할 때는 타입 추론이 잘 되어 ts를 쓸지 않을 때보다 수월하게 개발 했음
-- riot api cors 우회
+### typeScript
 
-  - [cors-anywhere](https://github.com/Kyounghwan01/cors-anywhere) 사용하여 프록시 우회로 해결
-  - 웹을 한번 더 거치기 때문에 시간이 소요되나 이것만큼 깔끔한 해결책이 없었음
-  - aws lambda를 사용해 자체 서버를 만드는 방법도 있으나 빠르게 프로젝트가 루즈해지는 것 같아 위 방법으로 해결
+- 기본 타입 정의는 물론, api response까지 strict하게 정의
+- 처음 설계를 할때는 사용할 모든 타입을 정의하기에 시간이 많이 소요됬으나, 본격적인 개발을 착수할 때는 타입 추론이 잘 되어 ts를 쓸지 않을 때보다 수월하게 개발 했음
 
-- 비동기
+### riot api cors 우회
 
-  - 유저 이름 검색 후, 최근 match data, 포지션, 챔피언 사용수, 유저 정도 등 여러 api의 res를 한 화면에 담아야 했는데, match data 내에 있는 챔피언 id, img를 다른 api에서 또 사용하기 때문에 한번에 여러 api를 쏘고 데이터를 맵핑 하는 과정에서 비동기 사용에 심의를 기울인것 같다.
+- [cors-anywhere](https://github.com/Kyounghwan01/cors-anywhere) 사용하여 프록시 우회로 해결
+- 웹을 한번 더 거치기 때문에 시간이 소요되나 이것만큼 깔끔한 해결책이 없었음
+- aws lambda를 사용해 자체 서버를 만드는 방법도 있으나 빠르게 프로젝트가 루즈해지는 것 같아 위 방법으로 해결
 
+### 비동기
+
+- 유저 이름 검색 후, 최근 match data, 포지션, 챔피언 사용수, 유저 정도 등 여러 api의 res를 한 화면에 담아야 했는데, match data 내에 있는 챔피언 id, img를 다른 api에서 또 사용하기 때문에 한번에 여러 api를 쏘고 데이터를 맵핑 하는 과정에서 비동기 사용에 심의를 기울인것 같다.
 - css를 위해 새로 고침할 때 마다 riot에게 정보를 다시 호출하는 과정에서 시간을 많이 소요
-  - faker 사용하여 mock 데이터 활용
+
+### css
+
+- 부스스트랩를 쓰지 않고, styled-components와 scss만을 이용하여 구현
