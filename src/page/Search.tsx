@@ -16,25 +16,6 @@ const Search = ({ userStore, champStore }: HomeContainerProps) => {
   const [userName, setUserName] = useState<string>('hide on bush');
 
   useEffect(() => {
-    console.log(3);
-    setMetaTags({
-      title: 'seo title',
-      description: 'seo desc',
-      imageUrl: 'https://cdn1.carrotins.com/static/images/common/drive-kakao.png',
-    });
-    return () => {
-      setMetaTags({});
-    };
-  }, []);
-
-  const setMetaTags = ({ title = '기본 타이틀', description = '기본 설명', imageUrl = '기본 사이트 이미지 경로' }) => {
-    document.querySelector('meta[property="og:title"]')?.setAttribute('content', `${title}`);
-    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
-    document.querySelector('meta[property="og:image"]')?.setAttribute('content', imageUrl);
-    document.querySelector('meta[property="og:url"]')?.setAttribute('content', window.location.href);
-  };
-
-  useEffect(() => {
     if (Object.keys(champStore.champs).length) return;
 
     champStore.getAllChamps();
@@ -60,10 +41,6 @@ const Search = ({ userStore, champStore }: HomeContainerProps) => {
     }
   };
 
-  const fbShare = () => {
-    window.open('https://www.facebook.com/sharer/sharer.php?u=https://khgg.netlify.app/');
-  };
-
   return (
     <MainLayout>
       <Container>
@@ -72,7 +49,6 @@ const Search = ({ userStore, champStore }: HomeContainerProps) => {
           {(userStore.loading || champStore.champLoading) && <span className="loading">로딩중!</span>}
           {!userStore.loading && userStore.errorMessage && <span className="error">{userStore.errorMessage}</span>}
         </AlertMessage>
-        <button onClick={fbShare}>seo</button>
         <div className="search-box">
           <Input
             onKeyPress={SearchEnter}
